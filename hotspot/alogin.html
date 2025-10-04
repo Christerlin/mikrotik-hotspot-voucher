@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ht">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="refresh" content="2; url=$(link-redirect)">
+  <meta http-equiv="pragma" content="no-cache">
+  <meta http-equiv="expires" content="-1">
+  <title>Redirect</title>
+  <style>
+    :root{
+      --bg:#0f172a;--card:#0f172a;--accent:#06b6d4;--accent2:#7c3aed;--muted:#94a3b8
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:"Inter",system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial;color:#e6eef8;background:linear-gradient(180deg,#071029 0%,#0b1220 100%);display:flex;align-items:center;justify-content:center}
+    .card{width:420px;max-width:95%;padding:32px;border-radius:20px;box-shadow:0 20px 40px rgba(16,24,40,0.1);background:var(--card);text-align:center;animation:fadeIn 0.8s ease}
+    h1{font-size:22px;margin:0 0 14px}
+    p{margin:0;color:var(--muted);font-size:15px}
+    a{color:var(--accent);font-weight:600;text-decoration:none;margin-left:6px}
+    a:hover{color:var(--accent2)}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+  </style>
+  <script>
+    function startClock(){
+      $(if popup == 'true')
+        open('$(link-status)','hotspot_status','toolbar=0,location=0,directories=0,status=0,menubars=0,resizable=1,width=320,height=220');
+      $(endif)
+      location.href=unescape('$(link-redirect-esc)');
+    }
+  </script>
+</head>
+<body onLoad="startClock()">
+  <div class="card">
+    <h1>✅ Connexion réussie</h1>
+    <p>Si la page ne s'ouvre pas automatiquement, cliquez 
+      <a href="$(link-redirect)">ici</a>.
+    </p>
+  </div>
+</body>
+</html>

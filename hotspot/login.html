@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>Connexion Voucher</title>
+  <meta http-equiv="pragma" content="no-cache" />
+  <meta http-equiv="expires" content="-1" />	
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:#0f172a;
+      --card:#1e293b;
+      --accent:#06b6d4;
+      --accent2:#7c3aed;
+      --muted:#94a3b8;
+    }
+    *{box-sizing:border-box}
+    html,body {
+      margin:0;
+      height:100%;
+      font-family:'Inter', sans-serif;
+      background:linear-gradient(180deg,#071029 0%,#0b1220 100%);
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      color:#e6eef8;
+    }
+    .card {
+      background:var(--card);
+      padding:35px 28px;
+      border-radius:18px;
+      box-shadow:0 20px 40px rgba(0,0,0,0.3);
+      width:380px;
+      max-width:95%;
+      text-align:center;
+      animation:fadeIn .8s ease;
+    }
+    h2 {
+      font-size:22px;
+      font-weight:600;
+      margin:0 0 12px;
+    }
+    p {
+      font-size:15px;
+      color:var(--muted);
+      margin-bottom:20px;
+    }
+    .voucher-input {
+      display:flex;
+      justify-content:center;
+      margin-bottom:20px;
+    }
+    .voucher-input input {
+      width:200px;
+      padding:12px;
+      font-size:18px;
+      text-align:center;
+      letter-spacing:2px;
+      border:2px solid #334155;
+      border-radius:10px;
+      outline:none;
+      background:#0f172a;
+      color:#fff;
+      transition:all 0.3s ease;
+    }
+    .voucher-input input:focus {
+      border-color:var(--accent);
+      box-shadow:0 0 8px rgba(6,182,212,0.5);
+    }
+    .btn {
+      width:100%;
+      padding:12px;
+      background:linear-gradient(90deg,var(--accent),var(--accent2));
+      border:none;
+      border-radius:10px;
+      color:#fff;
+      font-size:16px;
+      font-weight:600;
+      cursor:pointer;
+      transition:transform 0.2s ease;
+    }
+    .btn:hover {
+      transform:scale(1.05);
+    }
+    .footer {
+      margin-top:18px;
+      font-size:13px;
+      color:var(--muted);
+    }
+    .error {
+      color:#ff4b4b;
+      font-size:14px;
+      margin-top:10px;
+    }
+    a { color:var(--accent); text-decoration:none; font-weight:600 }
+    a:hover { color:var(--accent2) }
+    @keyframes fadeIn {
+      from{opacity:0;transform:translateY(20px)}
+      to{opacity:1;transform:translateY(0)}
+    }
+  </style>
+</head>
+<body>
+
+$(if chap-id)
+<form name="sendin" action="$(link-login-only)" method="post">
+  <input type="hidden" name="username" />
+  <input type="hidden" name="password" />
+  <input type="hidden" name="dst" value="status.html" />
+  <input type="hidden" name="popup" value="true" />
+</form>
+
+<script type="text/javascript" src="/md5.js"></script>
+<script type="text/javascript">
+function doLogin() {
+  var voucher = document.login.username.value;
+  document.sendin.username.value = voucher;
+  document.sendin.password.value = hexMD5('$(chap-id)' + voucher + '$(chap-challenge)');
+  document.sendin.submit();
+  return false;
+}
+</script>
+$(endif)
+
+<div class="card">
+  <h2>Connexion Wi-Fi</h2>
+  <p>Veuillez entrer votre code d’accès valide pour vous connecter au réseau.</p>
+  
+  <form name="login" action="$(link-login-only)" method="post" 
+        $(if chap-id) onSubmit="return doLogin()" $(endif)>
+    <input type="hidden" name="dst" value="status.html" />
+    <input type="hidden" name="popup" value="true" />
+    
+    <div class="voucher-input">
+      <input type="text" maxlength="8" name="username" value="$(username)" placeholder="Votre Code" required>
+    </div>
+    
+    <input class="btn" type="submit" value="Se connecter">
+    
+    <div class="footer">
+      $(if error)<div class="error">$(error)</div>$(endif)
+      <p>Vous n’avez pas de code ? Contactez-nous via 
+        <a href="https://wa.me/votre numero ici" target="_blank">WhatsApp</a>
+      </p>
+      <p>
+        <a href="prix.html">Voir nos offres et tarifs</a>
+      </p>
+    </div>
+    <footer style="margin-top:20px; font-size:12px; color:#94a3b8; text-align:center;">
+    © Christerlin Joseph, Développeur Web, Jr Pentester.
+    </footer>
+  </form>
+</div>
+
+</body>
+</html>

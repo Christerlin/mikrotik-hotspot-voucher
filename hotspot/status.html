@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ht">
+<head>
+<meta charset="utf-8">
+<title> Status De Connexion </title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+$(if refresh-timeout)
+<meta http-equiv="refresh" content="$(refresh-timeout-secs)">
+$(endif)
+<style>
+:root{
+  --bg:#0f172a;--card:#0f172a;--accent:#06b6d4;--accent2:#7c3aed;--muted:#94a3b8;--success:#0f766e
+}
+html,body{height:100%;margin:0;font-family:"Inter", system-ui, -apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial;color:#e6eef8;background:linear-gradient(180deg,#071029 0%,#0b1220 100%);display:flex;align-items:center;justify-content:center}
+.card{background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));border-radius:14px;padding:24px;box-shadow:0 10px 30px rgba(2,6,23,0.6);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,0.03);width:360px;text-align:center}
+h2{margin:0 0 10px;font-size:20px;font-weight:600;color:#fff}
+table{width:100%;border-collapse:collapse;margin-top:12px;color:#e6eef8;font-size:14px}
+td{padding:6px;text-align:left;border-bottom:1px solid rgba(255,255,255,0.1)}
+th{text-align:left;padding:6px;border-bottom:1px solid rgba(255,255,255,0.2)}
+.status{color:var(--accent2);font-weight:600}
+.logoff-btn{margin-top:18px;padding:10px 14px;border:none;border-radius:10px;background:linear-gradient(90deg,var(--accent),var(--accent2));color:#071029;font-weight:700;cursor:pointer;width:100%}
+.footer{margin-top:16px;font-size:12px;color:var(--muted);text-align:center}
+a,a:link,a:visited,a:active{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+</style>
+<script language="JavaScript">
+$(if advert-pending == 'yes')
+var popup='';
+function focusAdvert(){if(window.focus) popup.focus();}
+function openAdvert(){popup=open('$(link-advert)','hotspot_advert','');setTimeout(focusAdvert,1000);}
+$(endif)
+function openLogout(){if(window.name!='hotspot_status') return true; open('$(link-logout)','hotspot_logout','toolbar=0,location=0,directories=0,status=0,menubars=0,resizable=1,width=280,height=250'); window.close(); return false;}
+</script>
+</head>
+<body $(if advert-pending == 'yes') onLoad="openAdvert()" $(endif)>
+
+<div class="card">
+  <h2>Status</h2>
+  <table>
+    $(if login-by == 'trial')
+      <tr><td colspan="2" class="status">Welcome trial user!</td></tr>
+    $(elif login-by != 'mac')
+      <tr><td colspan="2" class="status">Welcome $(username)!</td></tr>
+    $(endif)
+    <tr><td>IP address:</td><td>$(ip)</td></tr>
+    <tr><td>Bytes up/down:</td><td>$(bytes-in-nice) / $(bytes-out-nice)</td></tr>
+    $(if session-time-left)
+      <tr><td>Connected / left:</td><td>$(uptime) / $(session-time-left)</td></tr>
+    $(else)
+      <tr><td>Connected:</td><td>$(uptime)</td></tr>
+    $(endif)
+    $(if blocked == 'yes')
+      <tr><td>Status:</td><td><div style="color:#FF8080"><a href="$(link-advert)" target="hotspot_advert">Advertisement required</a></div></td></tr>
+    $(elif refresh-timeout)
+      <tr><td>Status refresh:</td><td>$(refresh-timeout)</td></tr>
+    $(endif)
+  </table>
+
+  $(if login-by-mac != 'yes')
+    <form action="$(link-logout)" name="logout" onSubmit="return openLogout()">
+      <input type="submit" class="logoff-btn" value="Log Off">
+    </form>
+  $(endif)
+
+  <div class="footer">
+    © Christerlin Joseph, Développeur Web, Jr Pentester.
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="ht">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Prix</title>
+  <meta name="description" content="Pri pou voucher WiFi: 24h, 3 jou, 7 jou, 30 jou." />
+  <style>
+    :root{
+      --bg:#0f172a;--card:#0f172a;--panel:#0f172a;--muted:#94a3b8;--accent:#06b6d4;--accent2:#7c3aed;--glass:rgba(255,255,255,0.06)
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:"Inter", system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;color:#e6eef8;background:linear-gradient(180deg,#071029 0%, #0b1220 100%)}
+    .wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:40px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;width:100%;max-width:1100px}
+
+    .plan{background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));border-radius:14px;padding:22px;box-shadow:0 10px 30px rgba(2,6,23,0.6);backdrop-filter: blur(6px);border:1px solid rgba(255,255,255,0.03)}
+    .plan-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+    .plan-title{font-size:18px;font-weight:700;color:#fff}
+    .plan-sub{font-size:12px;color:var(--muted)}
+
+    .price{font-size:30px;font-weight:800;margin:10px 0;color:var(--accent)}
+    .currency{font-size:14px;font-weight:700;color:var(--muted);margin-left:6px}
+    .features{margin:12px 0;color:#cad6e8;font-size:14px}
+    .buy{display:inline-block;padding:10px 14px;border-radius:10px;background:linear-gradient(90deg,var(--accent),var(--accent2));color:#071029;font-weight:700;text-decoration:none;cursor:pointer}
+
+    footer{margin-top:26px;text-align:center;color:var(--muted);font-size:13px}
+
+    @media (max-width:520px){.plan{padding:16px}.price{font-size:24px}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div style="width:100%;max-width:1100px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;gap:12px;flex-wrap:wrap">
+        <div>
+          <h1 style="margin:0;font-size:20px">TARIFS DES CODES D'ACCÈS</h1>
+          <div style="color:var(--muted);font-size:13px">Choisissez le forfait qui vous convient le mieux.</div>
+        </div>
+      </div>
+
+      <div class="grid" id="plans">
+        <!-- Plan 3 jours -->
+        <section class="plan">
+          <div class="plan-header">
+            <div>
+              <div class="plan-title">3 jours</div>
+              <div class="plan-sub">Accès pendant 3 jours</div>
+            </div>
+            <div style="text-align:right">
+              <div class="price"><span class="price-value">100</span><span class="currency">HTG</span></div>
+            </div>
+          </div>
+          <div class="features">Durée : 3 jours<br>Nombre d'appareils : 1</div>
+          <div style="display:flex;gap:10px;align-items:center;justify-content:flex-start;margin-top:12px">
+             <a href="https://wa.me/Votre numero ici" class="buy" target="_blank">Acheter</a>
+          </div>
+        </section>
+
+        <!-- Plan 7 jours -->
+        <section class="plan">
+          <div class="plan-header">
+            <div>
+              <div class="plan-title">7 jours</div>
+              <div class="plan-sub">Accès pendant 7 jours</div>
+            </div>
+            <div style="text-align:right">
+              <div class="price"><span class="price-value">200</span><span class="currency">HTG</span></div>
+            </div>
+          </div>
+          <div class="features">Durée : 7 jours<br>Nombre d'appareils : 1</div>
+          <div style="display:flex;gap:10px;align-items:center;justify-content:flex-start;margin-top:12px">
+             <a href="https://wa.me/Votre numero ici" class="buy" target="_blank">Acheter</a>
+          </div>
+        </section>
+
+        <!-- Plan 15 jours -->
+        <section class="plan">
+          <div class="plan-header">
+            <div>
+              <div class="plan-title">15 jours</div>
+              <div class="plan-sub">Accès pendant 15 jours</div>
+            </div>
+            <div style="text-align:right">
+              <div class="price"><span class="price-value">500</span><span class="currency">HTG</span></div>
+            </div>
+          </div>
+          <div class="features">Durée : 15 jours<br>Nombre d'appareils : 1</div>
+          <div style="display:flex;gap:10px;align-items:center;justify-content:flex-start;margin-top:12px">
+             <a href="https://wa.me/Votre numero ici" class="buy" target="_blank">Acheter</a>
+          </div>
+        </section>
+
+        <!-- Plan 30 jours -->
+        <section class="plan">
+          <div class="plan-header">
+            <div>
+              <div class="plan-title">30 jours</div>
+              <div class="plan-sub">Accès pendant 30 jours</div>
+            </div>
+            <div style="text-align:right">
+              <div class="price"><span class="price-value">800</span><span class="currency">HTG</span></div>
+            </div>
+          </div>
+          <div class="features">Durée : 30 jours<br>Nombre d'appareils : 1</div>
+          <div style="display:flex;gap:10px;align-items:center;justify-content:flex-start;margin-top:12px">
+            <a href="https://wa.me/Votre numero ici" class="buy" target="_blank">Acheter</a>
+          </div>
+        </section>
+
+      </div>
+
+      <footer>© Christerlin Joseph, Développeur Web, Jr Pentester.</footer>
+    </div>
+  </div>
+</body>
+</html>
