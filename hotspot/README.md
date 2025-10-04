@@ -39,4 +39,5 @@ Ce projet est sous licence MIT – libre d’utilisation et de modification.
 
 👤 Auteur
 Développé par Christerlin Joseph
+
 📧 Contacts : christerlin.joseph@student.ueh.edu.ht , christerlin.joseph@icloud.com, christerlin16@gmail.com 
