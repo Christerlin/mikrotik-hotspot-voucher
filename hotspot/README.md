@@ -24,7 +24,7 @@ Le design est moderne, responsive et facile à modifier.
 etc.....
 ## 🚀 Installation
 1. Téléchargez ou clonez le projet :
-     git clone https://github.com/votre-nom/mikrovoucher.git
+     git clone https://github.com/Christerlin/mikrotik-hotspot-voucher.git
 
 2. Copiez les fichiers HTML/CSS/JS dans le dossier hotspot de votre MikroTik :
     /flash/hotspot/
@@ -32,9 +32,11 @@ etc.....
     NB : il faut générer des vouchers de 8 caractères, et le nom d'utilisateur doit être le même que le mot de passe pour que cela fonctionne.
 
 🤝 Contribution
-
 Les contributions sont les bienvenues ! Vous pouvez proposer des améliorations ou de nouveaux designs via Pull Requests.
 
 📜 Licence
-
 Ce projet est sous licence MIT – libre d’utilisation et de modification.
+
+👤 Auteur
+Développé par Christerlin Joseph
+📧 Contacts : christerlin.joseph@student.ueh.edu.ht , christerlin.joseph@icloud.com, christerlin16@gmail.com 
