@@ -30,6 +30,11 @@ etc.....
     /flash/hotspot/
 3. Configurez vos profils Hotspot et vos vouchers dans Mikhmon ou Userman.  
     NB : il faut générer des vouchers de 8 caractères, et le nom d'utilisateur doit être le même que le mot de passe pour que cela fonctionne.
+   
+update : andedan mikrotik Hotspot config v2 a gen fichier configiration router a pou hotspot la tou setup
+mach a swiv :
+
+
 
 🤝 Contribution
 Les contributions sont les bienvenues ! Vous pouvez proposer des améliorations ou de nouveaux designs via Pull Requests.
