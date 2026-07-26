@@ -1,31 +1,23 @@
-<!DOCTYPE html>
-<html lang="fr">
+<html>
+
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta http-equiv="pragma" content="no-cache">
-  <meta http-equiv="expires" content="-1">
-  <link rel="icon" href="/favicon.ico">
-  <title>Erreur - Hotspot</title>
-  <style>
-    :root{
-      --accent:#2563eb;--accent-hover:#1d4ed8;--bg:#efe7d6;--card:#faf4e6;
-      --text:#3a3428;--muted:#8a8064;--border:#e4d9bf
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%;margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;color:var(--text);background:var(--bg);display:flex;align-items:center;justify-content:center}
-    .card{width:400px;max-width:92%;padding:32px;border-radius:14px;border:1px solid var(--border);box-shadow:0 4px 16px rgba(0,0,0,0.06);background:var(--card);text-align:center}
-    h1{font-size:20px;margin:0 0 12px;color:#dc2626}
-    p{margin:0;color:var(--muted);font-size:14px}
-    a{color:var(--accent);font-weight:600;text-decoration:none}
-    a:hover{text-decoration:underline}
-  </style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="expires" content="-1">
+    <title>Internet hotspot - Error</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
-  <div class="card">
-    <h1>Erreur de connexion</h1>
-    <p>$(error)</p>
-    <p style="margin-top:14px"><a href="$(link-login)">Retour à la page de connexion</a></p>
-  </div>
+    <div class="ie-fixMinHeight">
+        <div class="main">
+            <div class="wrap">
+                <h1>Hotspot error: $(error)</h1>
+                <p class="info">Log in page: <a href="$(link-login)">$(link-login)</a></p>
+            </div>
+        </div>
+    </div>
 </body>
+
 </html>

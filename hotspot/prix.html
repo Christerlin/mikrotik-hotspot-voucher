@@ -1,63 +1,30 @@
 <!doctype html>
-<html lang="fr">
+<html lang="ht">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Tarifs</title>
-  <meta name="description" content="Tarifs des codes d'accès WiFi : 3, 7, 15 et 30 jours." />
-  <link rel="icon" href="/favicon.ico" />
-
-  <!-- ⚙️ À CONFIGURER : URL publique de votre backend de paiement (Render/Railway).
-       Doit être autorisée dans le walled-garden du MikroTik (voir doc de déploiement). -->
-  <script>
-    window.BACKEND_URL = "https://lambdawifi-deploy.onrender.com";
-    window.WHATSAPP_NUMBER = "50943907541"; // repli si le paiement en ligne échoue
-  </script>
-
+  <title>Prix</title>
+  <meta name="description" content="Pri pou voucher WiFi: 24h, 3 jou, 7 jou, 30 jou." />
   <style>
     :root{
-      --accent:#2563eb;--accent-hover:#1d4ed8;--bg:#efe7d6;--card:#faf4e6;
-      --text:#3a3428;--muted:#8a8064;--border:#e4d9bf
+      --bg:#0f172a;--card:#0f172a;--panel:#0f172a;--muted:#94a3b8;--accent:#06b6d4;--accent2:#7c3aed;--glass:rgba(255,255,255,0.06)
     }
     *{box-sizing:border-box}
-    html,body{height:100%;margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;color:var(--text);background:var(--bg)}
+    html,body{height:100%;margin:0;font-family:"Inter", system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;color:#e6eef8;background:linear-gradient(180deg,#071029 0%, #0b1220 100%)}
     .wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:40px}
     .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;width:100%;max-width:1100px}
 
-    .plan{background:var(--card);border-radius:14px;padding:22px;box-shadow:0 4px 16px rgba(0,0,0,0.06);border:1px solid var(--border)}
+    .plan{background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));border-radius:14px;padding:22px;box-shadow:0 10px 30px rgba(2,6,23,0.6);backdrop-filter: blur(6px);border:1px solid rgba(255,255,255,0.03)}
     .plan-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-    .plan-title{font-size:18px;font-weight:700;color:var(--text)}
+    .plan-title{font-size:18px;font-weight:700;color:#fff}
     .plan-sub{font-size:12px;color:var(--muted)}
 
     .price{font-size:30px;font-weight:800;margin:10px 0;color:var(--accent)}
     .currency{font-size:14px;font-weight:700;color:var(--muted);margin-left:6px}
-    .features{margin:12px 0;color:var(--text);font-size:14px}
-    .buy{display:inline-block;padding:11px 16px;border-radius:10px;border:0;background:var(--accent);color:#fff;font-weight:600;text-decoration:none;cursor:pointer;font-size:15px;transition:background .2s}
-    .buy:hover{background:var(--accent-hover)}
-    .buy:disabled{opacity:.6;cursor:default}
+    .features{margin:12px 0;color:#cad6e8;font-size:14px}
+    .buy{display:inline-block;padding:10px 14px;border-radius:10px;background:linear-gradient(90deg,var(--accent),var(--accent2));color:#071029;font-weight:700;text-decoration:none;cursor:pointer}
 
     footer{margin-top:26px;text-align:center;color:var(--muted);font-size:13px}
-
-    /* --- Fenêtre modale --- */
-    .overlay{position:fixed;inset:0;background:rgba(58,52,40,0.45);display:none;align-items:center;justify-content:center;padding:20px;z-index:50}
-    .overlay.show{display:flex}
-    .modal{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px;width:360px;max-width:95%;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,.2)}
-    .modal h3{margin:0 0 6px;font-size:18px}
-    .modal p{margin:0 0 16px;color:var(--muted);font-size:14px}
-    .method{display:flex;flex-direction:column;gap:12px;margin-top:12px}
-    .method button{padding:14px;border-radius:12px;border:1px solid var(--border);background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;min-height:64px;transition:border-color .2s,box-shadow .2s,transform .1s}
-    .method button:hover{border-color:var(--accent);box-shadow:0 3px 12px rgba(0,0,0,0.1)}
-    .method button:active{transform:scale(0.98)}
-    .method button img{height:40px;max-width:85%;object-fit:contain;pointer-events:none}
-    .close{margin-top:14px;background:none;border:0;color:var(--muted);cursor:pointer;font-size:13px}
-    .spinner{width:34px;height:34px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;margin:6px auto 14px;animation:spin 1s linear infinite}
-    @keyframes spin{to{transform:rotate(360deg)}}
-    .code{font-size:28px;letter-spacing:3px;font-weight:800;color:var(--text);background:#fffdf7;border:1px dashed var(--accent);border-radius:10px;padding:14px;margin:10px 0}
-    .err{color:#dc2626;font-size:14px;margin-top:8px}
-    .field{text-align:left;margin-bottom:14px}
-    .field label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
-    .field input,.field select{width:100%;padding:10px;border:1px solid var(--border);border-radius:10px;background:#fffdf7;color:var(--text);font-size:15px}
-    .field input:focus,.field select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,0.12)}
 
     @media (max-width:520px){.plan{padding:16px}.price{font-size:24px}}
   </style>
@@ -70,7 +37,6 @@
           <h1 style="margin:0;font-size:20px">TARIFS DES CODES D'ACCÈS</h1>
           <div style="color:var(--muted);font-size:13px">Choisissez le forfait qui vous convient le mieux.</div>
         </div>
-        <button class="buy" id="retrieveBtn" style="background:transparent;color:var(--accent);border:1px solid var(--border)">Déjà payé ?</button>
       </div>
 
       <div class="grid" id="plans">
@@ -82,12 +48,12 @@
               <div class="plan-sub">Accès pendant 3 jours</div>
             </div>
             <div style="text-align:right">
-              <div class="price"><span class="price-value">25</span><span class="currency">HTG</span></div>
+              <div class="price"><span class="price-value">100</span><span class="currency">HTG</span></div>
             </div>
           </div>
           <div class="features">Durée : 3 jours<br>Nombre d'appareils : 1</div>
-          <div style="margin-top:12px">
-            <button class="buy" data-plan="3j" data-label="3 jours – 25 HTG">Payer en ligne</button>
+          <div style="display:flex;gap:10px;align-items:center;justify-content:flex-start;margin-top:12px">
+             <a href="https://wa.me/Votre numero ici" class="buy" target="_blank">Acheter</a>
           </div>
         </section>
 
@@ -103,8 +69,8 @@
             </div>
           </div>
           <div class="features">Durée : 7 jours<br>Nombre d'appareils : 1</div>
-          <div style="margin-top:12px">
-            <button class="buy" data-plan="7j" data-label="7 jours – 200 HTG">Payer en ligne</button>
+          <div style="display:flex;gap:10px;align-items:center;justify-content:flex-start;margin-top:12px">
+             <a href="https://wa.me/Votre numero ici" class="buy" target="_blank">Acheter</a>
           </div>
         </section>
 
@@ -120,8 +86,8 @@
             </div>
           </div>
           <div class="features">Durée : 15 jours<br>Nombre d'appareils : 1</div>
-          <div style="margin-top:12px">
-            <button class="buy" data-plan="15j" data-label="15 jours – 500 HTG">Payer en ligne</button>
+          <div style="display:flex;gap:10px;align-items:center;justify-content:flex-start;margin-top:12px">
+             <a href="https://wa.me/Votre numero ici" class="buy" target="_blank">Acheter</a>
           </div>
         </section>
 
@@ -137,317 +103,15 @@
             </div>
           </div>
           <div class="features">Durée : 30 jours<br>Nombre d'appareils : 1</div>
-          <div style="margin-top:12px">
-            <button class="buy" data-plan="30j" data-label="30 jours – 800 HTG">Payer en ligne</button>
-          </div>
-        </section>
-
-        <!-- Plan personnalisé -->
-        <section class="plan">
-          <div class="plan-header">
-            <div>
-              <div class="plan-title">Personnalisé</div>
-              <div class="plan-sub">Sur mesure selon vos besoins</div>
-            </div>
-          </div>
-          <div class="features">Choisissez la durée et le nombre d'appareils.<br>Nous vous donnons le prix.</div>
-          <div style="margin-top:12px">
-            <button class="buy" id="customBtn">Personnaliser</button>
+          <div style="display:flex;gap:10px;align-items:center;justify-content:flex-start;margin-top:12px">
+            <a href="https://wa.me/Votre numero ici" class="buy" target="_blank">Acheter</a>
           </div>
         </section>
 
       </div>
 
-      <footer>© Codemi</footer>
+      <footer>© Christerlin Joseph, Développeur Web, Jr Pentester.</footer>
     </div>
   </div>
-
-  <!-- Modale : choix de la méthode -->
-  <div class="overlay" id="methodOverlay">
-    <div class="modal">
-      <h3 id="methodTitle">Choisir le mode de paiement</h3>
-      <p id="methodSub"></p>
-      <div class="method">
-        <button data-method="moncash" aria-label="Payer avec MonCash"><img src="img/moncash.png" alt="MonCash"></button>
-        <button data-method="natcash" aria-label="Payer avec NatCash"><img src="img/natcash.png" alt="NatCash"></button>
-        <button data-method="kashpaw" aria-label="Payer avec Kashpaw"><img src="img/kashpaw.png" alt="Kashpaw"></button>
-      </div>
-      <button class="close" id="methodClose">Annuler</button>
-    </div>
-  </div>
-
-  <!-- Modale : suivi / résultat -->
-  <div class="overlay" id="statusOverlay">
-    <div class="modal" id="statusModal"></div>
-  </div>
-
-  <!-- Modale : plan personnalisé (envoi WhatsApp) -->
-  <div class="overlay" id="customOverlay">
-    <div class="modal">
-      <h3>Plan personnalisé</h3>
-      <p>Indiquez vos besoins ; nous vous communiquons le prix par WhatsApp.</p>
-      <div class="field">
-        <label for="custDevices">Nombre d'appareils</label>
-        <input type="number" id="custDevices" min="1" value="1">
-      </div>
-      <div class="field">
-        <label>Durée</label>
-        <div style="display:flex;gap:8px">
-          <input type="number" id="custDuration" min="1" value="1" style="flex:1">
-          <select id="custUnit" style="flex:1">
-            <option value="jour(s)">Jour(s)</option>
-            <option value="semaine(s)">Semaine(s)</option>
-            <option value="mois">Mois</option>
-          </select>
-        </div>
-      </div>
-      <button class="buy" id="customSend" style="width:100%;margin-top:6px">Envoyer par WhatsApp</button>
-      <button class="close" id="customClose">Annuler</button>
-    </div>
-  </div>
-
-  <!-- Modale : récupération par code (PIN) -->
-  <div class="overlay" id="retrieveOverlay">
-    <div class="modal">
-      <h3>Récupérer mon accès</h3>
-      <p>Entrez le code de récupération noté avant le paiement.</p>
-      <div class="field">
-        <input type="text" id="retrievePin" placeholder="Ex : AB12CD" maxlength="10"
-               autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false"
-               style="text-align:center;letter-spacing:2px;text-transform:uppercase">
-      </div>
-      <button class="buy" id="retrieveSend" style="width:100%;margin-top:4px">Récupérer</button>
-      <button class="close" id="retrieveClose">Annuler</button>
-    </div>
-  </div>
-
-  <script>
-    (function () {
-      var BACKEND = (window.BACKEND_URL || "").replace(/\/$/, "");
-      var methodOverlay = document.getElementById("methodOverlay");
-      var methodSub = document.getElementById("methodSub");
-      var statusOverlay = document.getElementById("statusOverlay");
-      var statusModal = document.getElementById("statusModal");
-      var selectedPlan = null;
-      var pollTimer = null;
-
-      // Ouvre le choix de méthode pour un forfait (boutons avec data-plan).
-      document.querySelectorAll(".buy").forEach(function (btn) {
-        if (!btn.dataset.plan) return; // ignore le bouton "Personnaliser"
-        btn.addEventListener("click", function () {
-          selectedPlan = { id: btn.dataset.plan, label: btn.dataset.label };
-          methodSub.textContent = selectedPlan.label;
-          methodOverlay.classList.add("show");
-        });
-      });
-
-      // --- Plan personnalisé -> demande de prix par WhatsApp ---
-      var customOverlay = document.getElementById("customOverlay");
-      document.getElementById("customBtn").addEventListener("click", function () {
-        customOverlay.classList.add("show");
-      });
-      document.getElementById("customClose").addEventListener("click", function () {
-        customOverlay.classList.remove("show");
-      });
-      document.getElementById("customSend").addEventListener("click", function () {
-        var devices = document.getElementById("custDevices").value || "1";
-        var duration = document.getElementById("custDuration").value || "1";
-        var unit = document.getElementById("custUnit").value;
-        var msg =
-          "Bonjour, je souhaite un plan personnalisé :\n" +
-          "- Nombre d'appareils : " + devices + "\n" +
-          "- Durée : " + duration + " " + unit + "\n" +
-          "Quel est le prix ?";
-        var url = "https://wa.me/" + window.WHATSAPP_NUMBER + "?text=" + encodeURIComponent(msg);
-        window.open(url, "_blank");
-        customOverlay.classList.remove("show");
-      });
-      document.getElementById("methodClose").addEventListener("click", function () {
-        methodOverlay.classList.remove("show");
-      });
-
-      // --- Récupération par code (PIN) ---
-      var retrieveOverlay = document.getElementById("retrieveOverlay");
-      function openRetrieve() {
-        retrieveOverlay.classList.add("show");
-        document.getElementById("retrievePin").focus();
-      }
-      document.getElementById("retrieveBtn").addEventListener("click", openRetrieve);
-      document.getElementById("retrieveClose").addEventListener("click", function () {
-        retrieveOverlay.classList.remove("show");
-      });
-      document.getElementById("retrieveSend").addEventListener("click", function () {
-        var pin = (document.getElementById("retrievePin").value || "").toUpperCase().replace(/\s+/g, "");
-        if (!pin) return;
-        retrieveOverlay.classList.remove("show");
-        pollRetrieve(pin);
-      });
-
-      // Choix d'une méthode -> création du paiement.
-      document.querySelectorAll("#methodOverlay .method button").forEach(function (b) {
-        b.addEventListener("click", function () {
-          startCheckout(selectedPlan, b.dataset.method);
-        });
-      });
-
-      function showStatus(html) {
-        statusModal.innerHTML = html;
-        statusOverlay.classList.add("show");
-      }
-
-      // Annule le suivi en cours : arrête le polling, oublie la commande, ferme.
-      window.cancelPending = function () {
-        clearInterval(pollTimer);
-        localStorage.removeItem("pendingOrder");
-        statusOverlay.classList.remove("show");
-      };
-
-      async function startCheckout(plan, method) {
-        methodOverlay.classList.remove("show");
-        showStatus('<div class="spinner"></div><p>Redirection vers le paiement…</p><button class="close" onclick="cancelPending()">Annuler</button>');
-        try {
-          var res = await fetch(BACKEND + "/api/checkout", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ planId: plan.id, method: method }),
-          });
-          var data = await res.json();
-          if (!res.ok || !data.redirectUrl) throw new Error(data.error || "Échec");
-          // On mémorise la commande (pour le retour automatique quand c'est possible).
-          localStorage.setItem("pendingOrder", JSON.stringify({ reference: data.reference, claimToken: data.claimToken, label: plan.label, ts: Date.now() }));
-          // On montre le CODE DE RÉCUPÉRATION avant de rediriger : le client le note,
-          // et pourra récupérer son voucher même si le navigateur perd la session.
-          var payUrl = data.redirectUrl;
-          window.goPay = function () { window.location.href = payUrl; };
-          showStatus(
-            "<h3>Notez votre code de récupération</h3>" +
-              '<div class="code">' + (data.retrievalPin || "—") + "</div>" +
-              "<p style=\"font-size:13px\">Si votre code d'accès n'apparaît pas après le paiement, revenez ici, cliquez « Déjà payé ? » et entrez ce code.</p>" +
-              '<button class="buy" style="width:100%" onclick="goPay()">Continuer vers le paiement</button>'
-          );
-        } catch (e) {
-          showStatus(
-            '<h3>Paiement indisponible</h3><p class="err">' +
-              (e.message || "Erreur") +
-              '</p><p>Vous pouvez nous contacter sur <a style="color:var(--accent)" target="_blank" rel="noopener" href="https://wa.me/' +
-              window.WHATSAPP_NUMBER +
-              '">WhatsApp</a>.</p><button class="buy" onclick="location.reload()">Fermer</button>'
-          );
-        }
-      }
-
-      // Affiche l'écran de vérification (avec bouton manuel + annuler).
-      function showVerifying(label) {
-        showStatus(
-          '<div class="spinner"></div><h3>Vérification du paiement…</h3><p>' +
-            (label || "") +
-            '</p><p style="font-size:13px">Si vous avez payé, votre code apparaîtra dans un instant.</p>' +
-            '<button class="buy" style="width:100%" onclick="checkNow()">Vérifier maintenant</button>' +
-            '<button class="close" onclick="cancelPending()">Annuler</button>'
-        );
-      }
-
-      // Affiche le code livré puis connecte automatiquement.
-      function showDelivered(code) {
-        clearInterval(pollTimer);
-        localStorage.removeItem("pendingOrder");
-        showStatus(
-          "<h3>✅ Paiement confirmé</h3><p>Votre code d'accès :</p>" +
-            '<div class="code">' + code + "</div>" +
-            '<p>Connexion automatique en cours…</p><div class="spinner"></div>' +
-            '<p style="font-size:13px;margin-top:10px">Notez ce code pour vous reconnecter plus tard.</p>'
-        );
-        setTimeout(function () {
-          window.location = "login.html?code=" + encodeURIComponent(code);
-        }, 2500);
-      }
-
-      // Traite le résultat d'une vérification. Renvoie true si c'est terminé.
-      function handleResult(data) {
-        if (data && data.status === "DELIVERED" && data.voucherCode) {
-          showDelivered(data.voucherCode);
-          return true;
-        }
-        if (data && (data.status === "EXPIRED" || data.status === "FAILED")) {
-          clearInterval(pollTimer);
-          localStorage.removeItem("pendingOrder");
-          showStatus('<h3>Paiement non abouti</h3><p class="err">La commande a expiré ou a échoué.</p><button class="buy" onclick="location.reload()">Fermer</button>');
-          return true;
-        }
-        return false; // PENDING -> on continue
-      }
-
-      // Boucle de vérification générique. `doFetch` renvoie une promesse de réponse.
-      function startPolling(doFetch, label) {
-        var attempts = 0;
-        clearInterval(pollTimer);
-        async function runCheck() {
-          try {
-            var res = await doFetch();
-            handleResult(await res.json());
-          } catch (e) {
-            /* on réessaiera au prochain tick */
-          }
-        }
-        window.checkNow = function () { runCheck(); };
-        showVerifying(label);
-        runCheck(); // première vérification immédiate
-        pollTimer = setInterval(function () {
-          attempts++;
-          runCheck();
-          if (attempts > 60) {
-            clearInterval(pollTimer);
-            showStatus(
-              "<h3>Vérification en cours</h3><p>Si vous avez payé, votre code sera prêt sous peu.</p>" +
-                '<button class="buy" style="width:100%" onclick="checkNow()">Vérifier maintenant</button>' +
-                '<button class="close" onclick="cancelPending()">Annuler</button>'
-            );
-          }
-        }, 3000);
-      }
-
-      // Suivi automatique par référence + claim token (retour de Pay'm).
-      function pollOrder(reference, claimToken, label) {
-        startPolling(function () {
-          return fetch(BACKEND + "/api/order/" + encodeURIComponent(reference), {
-            headers: { "x-claim-token": claimToken || "" },
-          });
-        }, label);
-      }
-
-      // Récupération manuelle par code court (PIN).
-      function pollRetrieve(pin) {
-        startPolling(function () {
-          return fetch(BACKEND + "/api/retrieve/" + encodeURIComponent(pin));
-        }, "Code : " + pin);
-      }
-
-      // Reprend le suivi d'une commande en attente (retour de Pay'm).
-      function resumePending() {
-        var pending = localStorage.getItem("pendingOrder");
-        if (!pending) return;
-        try {
-          var o = JSON.parse(pending);
-          if (o && o.ts && Date.now() - o.ts > 20 * 60000) {
-            localStorage.removeItem("pendingOrder"); // trop vieux
-          } else if (o && o.reference) {
-            pollOrder(o.reference, o.claimToken, o.label);
-          }
-        } catch (e) {
-          localStorage.removeItem("pendingOrder");
-        }
-      }
-      resumePending();
-      // Si la page est restaurée depuis le cache (bouton « retour »), on relance
-      // le suivi au lieu d'afficher l'écran figé « Redirection… ».
-      window.addEventListener("pageshow", function (e) {
-        if (e.persisted) resumePending();
-      });
-      // Lien « Déjà payé ? » depuis login.html -> ouvre directement la saisie du PIN.
-      if (new URLSearchParams(window.location.search).get("retrieve") === "1") {
-        openRetrieve();
-      }
-    })();
-  </script>
 </body>
 </html>
