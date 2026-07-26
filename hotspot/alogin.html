@@ -9,16 +9,16 @@
   <title>Redirect</title>
   <style>
     :root{
-      --bg:#0f172a;--card:#0f172a;--accent:#06b6d4;--accent2:#7c3aed;--muted:#94a3b8
+      --accent:#2563eb;--accent-hover:#1d4ed8;--bg:#efe7d6;--card:#faf4e6;--text:#3a3428;--muted:#8a8064;--border:#e4d9bf
     }
     *{box-sizing:border-box}
-    html,body{height:100%;margin:0;font-family:"Inter",system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial;color:#e6eef8;background:linear-gradient(180deg,#071029 0%,#0b1220 100%);display:flex;align-items:center;justify-content:center}
-    .card{width:420px;max-width:95%;padding:32px;border-radius:20px;box-shadow:0 20px 40px rgba(16,24,40,0.1);background:var(--card);text-align:center;animation:fadeIn 0.8s ease}
+    html,body{height:100%;margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;color:var(--text);background:var(--bg);display:flex;align-items:center;justify-content:center}
+    .card{width:420px;max-width:92%;padding:32px;border-radius:14px;border:1px solid var(--border);box-shadow:0 4px 16px rgba(0,0,0,0.06);background:var(--card);text-align:center;animation:fadeIn .5s ease}
     h1{font-size:22px;margin:0 0 14px}
     p{margin:0;color:var(--muted);font-size:15px}
     a{color:var(--accent);font-weight:600;text-decoration:none;margin-left:6px}
-    a:hover{color:var(--accent2)}
-    @keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+    a:hover{color:var(--accent-hover)}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
   </style>
   <script>
     function startClock(){

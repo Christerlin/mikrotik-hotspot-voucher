@@ -34,7 +34,10 @@ etc.....
 update : andedan mikrotik Hotspot config v2 a gen fichier configiration router a pou hotspot la tou setup
 mach a swiv :
 
-
+## ⚙️ À personnaliser avant déploiement
+Avant de copier les fichiers sur le MikroTik, remplacez ces valeurs par défaut :
+- **Numéro WhatsApp** : `509XXXXXXXX` dans `login.html` et `prix.html` (liens `https://wa.me/...`), et `+509 XX XX XX XX` dans `logout.html`.
+- **Tarifs / durées** : les forfaits (3, 7, 15, 30 jours – 100/200/500/800 HTG) sont définis dans `prix.html`.
 
 🤝 Contribution
 Les contributions sont les bienvenues ! Vous pouvez proposer des améliorations ou de nouveaux designs via Pull Requests.
