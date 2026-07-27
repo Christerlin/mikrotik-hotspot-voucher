@@ -1,0 +1,376 @@
+/* =====================================================================
+   LambdaWifi — système de design "billet d'accès" (boarding-pass)
+   Un seul fichier, partagé par toutes les pages du portail, pour que
+   chaque écran (connexion, statut, tarifs, erreur…) reste cohérent.
+   ===================================================================== */
+
+:root{
+  /* Papier / encre — palette chaude, inspirée d'un billet imprimé */
+  --paper:      #f2e6cf;
+  --card:       #fffaf0;
+  --stub:       #ecdcb8;
+  --ink:        #241b13;
+  --ink-soft:   #8a7455;
+  --line:       #d9c49b;
+
+  /* Action — couleur constante pour tous les boutons/CTA */
+  --accent:      #c2410c;
+  --accent-dark: #9a3412;
+  --accent-ink:  #fff8ef;
+
+  /* "Humeur" du tampon d'état — change selon la page, coeur du système
+     reste identique (voir classes .mood-* plus bas) */
+  --mood:      var(--accent);
+  --mood-dark: var(--accent-dark);
+
+  --danger: #9c2b1f;
+
+  --overlay-bg: rgba(36,27,19,.55);
+
+  --font-display: Georgia, 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', 'Times New Roman', serif;
+  --font-label:   -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+  --font-mono:    ui-monospace, 'SF Mono', 'Cascadia Mono', 'Roboto Mono', Consolas, monospace;
+
+  --radius: 20px;
+}
+
+/* Humeurs (accents contextuels du tampon, ne changent pas les boutons) */
+.mood-ok{      --mood:#0d6b52; --mood-dark:#0a5743; }
+.mood-warn{    --mood:#b45309; --mood-dark:#92400e; }
+.mood-error{   --mood:#9c2b1f; --mood-dark:#7a2117; }
+.mood-neutral{ --mood:#6b5a3e; --mood-dark:#54452f; }
+
+*{ box-sizing:border-box }
+
+html,body{
+  height:100%;
+  margin:0;
+  color:var(--ink);
+  font-family:var(--font-label);
+}
+
+body.page{
+  min-height:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:32px 16px;
+  background-color:var(--paper);
+  /* Grain de papier — texture en pur CSS, aucune image requise */
+  background-image:
+    radial-gradient(rgba(36,27,19,.05) 1px, transparent 1.2px);
+  background-size:15px 15px;
+}
+
+a{ color:var(--accent); text-decoration:none; font-weight:700 }
+a:hover{ color:var(--accent-dark); text-decoration:underline }
+
+/* --------------------------------------------------------------------
+   Le billet : carte principale, réutilisée partout (connexion, statut,
+   erreur…) et pour les modales de prix.html.
+   -------------------------------------------------------------------- */
+.ticket{
+  position:relative;
+  width:380px;
+  max-width:100%;
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  box-shadow:0 1px 2px rgba(36,27,19,.06), 0 24px 48px -16px rgba(36,27,19,.28);
+  padding:30px 28px;
+  animation:ticketIn .55s cubic-bezier(.22,1,.36,1) both;
+}
+@keyframes ticketIn{
+  from{ opacity:0; transform:translateY(16px) rotate(-.6deg) }
+  to{   opacity:1; transform:none }
+}
+
+.eyebrow{
+  font-family:var(--font-label);
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--ink-soft);
+}
+.h1{
+  font-family:var(--font-display);
+  font-size:24px;
+  font-weight:700;
+  margin:2px 0 4px;
+  line-height:1.15;
+}
+.sub{
+  font-family:var(--font-label);
+  font-size:14px;
+  color:var(--ink-soft);
+  margin:0 0 18px;
+}
+
+/* Ligne de perforation en pointillés, avec deux "trous" ronds — sépare
+   le corps du billet de sa souche (stub), comme un vrai ticket détachable. */
+.perforation{
+  position:relative;
+  height:0;
+  margin:20px -28px;
+  border-top:2px dashed var(--line);
+}
+.perforation::before,.perforation::after{
+  content:"";
+  position:absolute; top:50%; transform:translateY(-50%);
+  width:22px;height:22px;border-radius:50%;
+  background:var(--paper);
+}
+.perforation::before{ left:-11px }
+.perforation::after{  right:-11px }
+/* Variante utilisée à l'intérieur d'une modale (fond sombre translucide) */
+.perforation.on-overlay::before,.perforation.on-overlay::after{
+  background:var(--overlay-bg);
+}
+
+.stub{ padding-top:4px }
+
+/* Tampon circulaire — pour l'état ("CONNECTÉ", prix, etc.) */
+.stamp{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:64px;height:64px;
+  border-radius:50%;
+  border:2.5px solid var(--mood);
+  color:var(--mood);
+  font-family:var(--font-display);
+  font-weight:700;
+  font-size:11px;
+  line-height:1.15;
+  text-align:center;
+  text-transform:uppercase;
+  letter-spacing:.03em;
+  transform:rotate(-9deg);
+  flex:none;
+}
+
+/* --------------------------------------------------------------------
+   Formulaires
+   -------------------------------------------------------------------- */
+.field{ text-align:left; margin-bottom:14px }
+.field label{
+  display:block;
+  font-family:var(--font-label);
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--ink-soft);
+  margin-bottom:6px;
+}
+.field input,.field select{
+  width:100%;
+  padding:12px;
+  border:1px solid var(--line);
+  border-radius:10px;
+  background:var(--paper);
+  color:var(--ink);
+  font-size:15px;
+  font-family:var(--font-label);
+  outline:none;
+  transition:border-color .2s, box-shadow .2s;
+}
+.field input:focus,.field select:focus{
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px rgba(194,65,12,.16);
+}
+
+.voucher-input input{
+  width:100%;
+  padding:16px 12px;
+  font-family:var(--font-mono);
+  font-size:20px;
+  text-align:center;
+  letter-spacing:.4em;
+  text-indent:.4em; /* recentre visuellement avec le tracking */
+  border:2px dashed var(--line);
+  border-radius:12px;
+  outline:none;
+  background:
+    repeating-linear-gradient(90deg, transparent, transparent 6px, rgba(36,27,19,.04) 6px, rgba(36,27,19,.04) 7px);
+  color:var(--ink);
+  transition:border-color .2s, box-shadow .2s;
+}
+.voucher-input input:focus{
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px rgba(194,65,12,.14);
+}
+
+/* --------------------------------------------------------------------
+   Boutons
+   -------------------------------------------------------------------- */
+.buy{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  padding:15px 20px;
+  margin-top:4px;
+  border:none;
+  border-radius:999px;
+  background:var(--accent);
+  color:var(--accent-ink);
+  font-family:var(--font-label);
+  font-weight:700;
+  font-size:14px;
+  letter-spacing:.05em;
+  text-transform:uppercase;
+  text-decoration:none;
+  cursor:pointer;
+  box-shadow:0 4px 0 var(--accent-dark);
+  transition:transform .12s ease, box-shadow .12s ease, background .15s ease;
+}
+.buy:hover{ background:var(--accent-dark) }
+.buy:active{ transform:translateY(3px); box-shadow:0 1px 0 var(--accent-dark) }
+.buy:disabled{ opacity:.6; cursor:default; box-shadow:none; transform:none }
+
+.close{
+  display:block;
+  width:100%;
+  margin-top:14px;
+  background:none;
+  border:none;
+  color:var(--ink-soft);
+  font-family:var(--font-label);
+  font-size:13px;
+  text-decoration:underline;
+  text-underline-offset:3px;
+  cursor:pointer;
+}
+.close:hover{ color:var(--ink) }
+
+/* --------------------------------------------------------------------
+   Petits composants réutilisés par le JS de prix.html (mêmes noms de
+   classes qu'avant — seul le style change).
+   -------------------------------------------------------------------- */
+.spinner{
+  width:34px;height:34px;
+  margin:4px auto 14px;
+  border:3px dashed var(--line);
+  border-top-color:var(--accent);
+  border-radius:50%;
+  animation:spin 1s linear infinite;
+}
+@keyframes spin{ to{ transform:rotate(360deg) } }
+
+.code{
+  font-family:var(--font-mono);
+  font-size:26px;
+  font-weight:700;
+  letter-spacing:.3em;
+  text-indent:.3em;
+  color:var(--ink);
+  background:repeating-linear-gradient(90deg, transparent, transparent 6px, rgba(36,27,19,.05) 6px, rgba(36,27,19,.05) 7px);
+  border:2px dashed var(--accent);
+  border-radius:12px;
+  padding:16px 10px;
+  margin:10px 0;
+}
+
+.err{ color:var(--danger); font-weight:700; font-size:14px; margin-top:8px }
+
+/* --------------------------------------------------------------------
+   Fenêtres modales (prix.html)
+   -------------------------------------------------------------------- */
+.overlay{
+  position:fixed; inset:0;
+  background:var(--overlay-bg);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  z-index:50;
+}
+.overlay.show{ display:flex }
+.overlay .modal{
+  position:relative;
+  width:380px;
+  max-width:100%;
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:28px;
+  text-align:center;
+  box-shadow:0 24px 60px rgba(0,0,0,.35);
+  animation:ticketIn .4s cubic-bezier(.22,1,.36,1) both;
+}
+.overlay .modal h3{
+  font-family:var(--font-display);
+  font-size:19px;
+  margin:0 0 6px;
+}
+.overlay .modal p{ margin:0 0 16px; color:var(--ink-soft); font-size:14px }
+
+/* Choix du mode de paiement — tuiles avec logo */
+.method{ display:flex; flex-direction:column; gap:12px; margin-top:12px }
+.method button{
+  padding:14px;
+  border-radius:14px;
+  border:1px dashed var(--line);
+  background:var(--paper);
+  cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  min-height:64px;
+  transition:border-color .2s, box-shadow .2s, transform .1s;
+}
+.method button:hover{ border-color:var(--accent); border-style:solid; box-shadow:0 4px 14px rgba(36,27,19,.12) }
+.method button:active{ transform:scale(.98) }
+.method button img{ height:38px; max-width:85%; object-fit:contain; pointer-events:none }
+
+/* --------------------------------------------------------------------
+   Grille de billets (prix.html) — chaque plan est un mini-billet avec
+   sa propre souche (prix en tampon + bouton).
+   -------------------------------------------------------------------- */
+.ticket-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(240px,1fr));
+  gap:22px;
+  width:100%;
+  max-width:1120px;
+}
+.ticket-grid > .ticket{ width:auto; padding:24px 22px }
+.ticket-grid > .ticket:nth-child(1){ animation-delay:.02s }
+.ticket-grid > .ticket:nth-child(2){ animation-delay:.07s }
+.ticket-grid > .ticket:nth-child(3){ animation-delay:.12s }
+.ticket-grid > .ticket:nth-child(4){ animation-delay:.17s }
+.ticket-grid > .ticket:nth-child(5){ animation-delay:.22s }
+
+.plan-head{ display:flex; align-items:flex-start; justify-content:space-between; gap:10px }
+.plan-name{ font-family:var(--font-display); font-size:19px; font-weight:700 }
+.plan-desc{ font-size:12px; color:var(--ink-soft); margin-top:2px }
+.plan-price{ font-family:var(--font-display); font-size:26px; font-weight:700; color:var(--accent); white-space:nowrap }
+.plan-price .cur{ font-family:var(--font-label); font-size:11px; font-weight:700; color:var(--ink-soft); margin-left:3px; text-transform:uppercase }
+.plan-features{ font-size:13px; color:var(--ink-soft); margin:14px 0 16px; line-height:1.6 }
+
+/* --------------------------------------------------------------------
+   "Manifeste" — remplace les <table> pour les infos de session
+   (statut, déconnexion) : lignes label/valeur, esprit fiche de vol.
+   -------------------------------------------------------------------- */
+.manifest{ margin:18px 0 4px }
+.manifest .row{
+  display:flex; align-items:baseline; justify-content:space-between; gap:12px;
+  padding:9px 0;
+  border-bottom:1px dotted var(--line);
+  font-size:14px;
+}
+.manifest .row:last-child{ border-bottom:none }
+.manifest .row .k{
+  font-family:var(--font-label);
+  font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
+  color:var(--ink-soft); white-space:nowrap;
+}
+.manifest .row .v{ font-family:var(--font-mono); font-weight:600; text-align:right }
+.manifest .row.highlight .v{ color:var(--mood); font-family:var(--font-display); font-weight:700 }
+
+footer.credit{ margin-top:20px; text-align:center; color:var(--ink-soft); font-size:11px; letter-spacing:.05em }
+
+@media (max-width:480px){
+  .ticket{ padding:26px 20px }
+  .h1{ font-size:21px }
+}

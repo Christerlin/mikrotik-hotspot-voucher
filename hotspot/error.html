@@ -1,23 +1,22 @@
-<html>
-
+<!DOCTYPE html>
+<html lang="fr">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="pragma" content="no-cache">
-    <meta http-equiv="expires" content="-1">
-    <title>Internet hotspot - Error</title>
-    <link rel="stylesheet" href="css/style.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="pragma" content="no-cache">
+  <meta http-equiv="expires" content="-1">
+  <link rel="icon" href="/favicon.ico">
+  <title>Erreur - Hotspot</title>
+  <link rel="stylesheet" href="css/theme.css">
 </head>
-
-<body>
-    <div class="ie-fixMinHeight">
-        <div class="main">
-            <div class="wrap">
-                <h1>Hotspot error: $(error)</h1>
-                <p class="info">Log in page: <a href="$(link-login)">$(link-login)</a></p>
-            </div>
-        </div>
-    </div>
+<body class="page mood-error">
+  <div class="ticket" style="text-align:center">
+    <div class="stamp" style="margin:0 auto 14px">REJETÉ</div>
+    <div class="h1">Erreur de connexion</div>
+    <p class="sub">$(error)</p>
+    <div class="perforation"></div>
+    <a class="buy" href="$(link-login)" style="display:inline-flex">Retour à la connexion</a>
+    <footer class="credit">© Codemi</footer>
+  </div>
 </body>
-
 </html>

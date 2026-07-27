@@ -1,117 +1,444 @@
 <!doctype html>
-<html lang="ht">
+<html lang="fr">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Prix</title>
-  <meta name="description" content="Pri pou voucher WiFi: 24h, 3 jou, 7 jou, 30 jou." />
-  <style>
-    :root{
-      --bg:#0f172a;--card:#0f172a;--panel:#0f172a;--muted:#94a3b8;--accent:#06b6d4;--accent2:#7c3aed;--glass:rgba(255,255,255,0.06)
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%;margin:0;font-family:"Inter", system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;color:#e6eef8;background:linear-gradient(180deg,#071029 0%, #0b1220 100%)}
-    .wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:40px}
-    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;width:100%;max-width:1100px}
+  <title>Tarifs</title>
+  <meta name="description" content="Tarifs des codes d'accès WiFi : 3, 7, 15 et 30 jours." />
+  <link rel="icon" href="/favicon.ico" />
 
-    .plan{background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));border-radius:14px;padding:22px;box-shadow:0 10px 30px rgba(2,6,23,0.6);backdrop-filter: blur(6px);border:1px solid rgba(255,255,255,0.03)}
-    .plan-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-    .plan-title{font-size:18px;font-weight:700;color:#fff}
-    .plan-sub{font-size:12px;color:var(--muted)}
+  <!-- Configuration locale : copiez config.example.js vers config.js et
+       remplissez vos valeurs (URL du backend, numéro WhatsApp). -->
+  <script src="config.js"></script>
 
-    .price{font-size:30px;font-weight:800;margin:10px 0;color:var(--accent)}
-    .currency{font-size:14px;font-weight:700;color:var(--muted);margin-left:6px}
-    .features{margin:12px 0;color:#cad6e8;font-size:14px}
-    .buy{display:inline-block;padding:10px 14px;border-radius:10px;background:linear-gradient(90deg,var(--accent),var(--accent2));color:#071029;font-weight:700;text-decoration:none;cursor:pointer}
-
-    footer{margin-top:26px;text-align:center;color:var(--muted);font-size:13px}
-
-    @media (max-width:520px){.plan{padding:16px}.price{font-size:24px}}
-  </style>
+  <link rel="stylesheet" href="css/theme.css">
 </head>
-<body>
-  <div class="wrap">
-    <div style="width:100%;max-width:1100px">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;gap:12px;flex-wrap:wrap">
-        <div>
-          <h1 style="margin:0;font-size:20px">TARIFS DES CODES D'ACCÈS</h1>
-          <div style="color:var(--muted);font-size:13px">Choisissez le forfait qui vous convient le mieux.</div>
+<body class="page" style="align-items:flex-start">
+  <div style="width:100%;max-width:1120px;margin:0 auto">
+
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:24px">
+      <div>
+        <div class="eyebrow">LambdaWifi &middot; Billetterie</div>
+        <div class="h1">Choisissez votre pass</div>
+        <div class="sub" style="margin-bottom:0">Un forfait pour chaque besoin — payez en ligne, recevez votre code aussitôt.</div>
+      </div>
+      <button class="buy" id="retrieveBtn" style="width:auto;background:transparent;color:var(--accent);box-shadow:none;border:2px solid var(--line)">Déjà payé ?</button>
+    </div>
+
+    <div class="ticket-grid" id="plans">
+      <!-- Plan 3 jours -->
+      <section class="ticket">
+        <div class="plan-head">
+          <div>
+            <div class="plan-name">3 jours</div>
+            <div class="plan-desc">Accès pendant 3 jours</div>
+          </div>
+          <div class="plan-price">25<span class="cur">HTG</span></div>
         </div>
+        <div class="plan-features">1 appareil connecté</div>
+        <button class="buy" data-plan="3j" data-label="3 jours – 25 HTG">Payer en ligne</button>
+      </section>
+
+      <!-- Plan 7 jours -->
+      <section class="ticket">
+        <div class="plan-head">
+          <div>
+            <div class="plan-name">7 jours</div>
+            <div class="plan-desc">Accès pendant 7 jours</div>
+          </div>
+          <div class="plan-price">200<span class="cur">HTG</span></div>
+        </div>
+        <div class="plan-features">1 appareil connecté</div>
+        <button class="buy" data-plan="7j" data-label="7 jours – 200 HTG">Payer en ligne</button>
+      </section>
+
+      <!-- Plan 15 jours -->
+      <section class="ticket">
+        <div class="plan-head">
+          <div>
+            <div class="plan-name">15 jours</div>
+            <div class="plan-desc">Accès pendant 15 jours</div>
+          </div>
+          <div class="plan-price">500<span class="cur">HTG</span></div>
+        </div>
+        <div class="plan-features">1 appareil connecté</div>
+        <button class="buy" data-plan="15j" data-label="15 jours – 500 HTG">Payer en ligne</button>
+      </section>
+
+      <!-- Plan 30 jours -->
+      <section class="ticket">
+        <div class="plan-head">
+          <div>
+            <div class="plan-name">30 jours</div>
+            <div class="plan-desc">Accès pendant 30 jours</div>
+          </div>
+          <div class="plan-price">800<span class="cur">HTG</span></div>
+        </div>
+        <div class="plan-features">1 appareil connecté</div>
+        <button class="buy" data-plan="30j" data-label="30 jours – 800 HTG">Payer en ligne</button>
+      </section>
+
+      <!-- Plan personnalisé -->
+      <section class="ticket">
+        <div class="plan-head">
+          <div>
+            <div class="plan-name">Personnalisé</div>
+            <div class="plan-desc">Sur mesure selon vos besoins</div>
+          </div>
+        </div>
+        <div class="plan-features">Choisissez la durée et le nombre d'appareils. Nous vous donnons le prix.</div>
+        <button class="buy" id="customBtn">Personnaliser</button>
+      </section>
+    </div>
+
+    <footer class="credit">© Codemi</footer>
+  </div>
+
+  <!-- Modale : choix de la méthode -->
+  <div class="overlay" id="methodOverlay">
+    <div class="modal">
+      <h3 id="methodTitle">Choisir le mode de paiement</h3>
+      <p id="methodSub"></p>
+      <div class="perforation on-overlay"></div>
+      <div class="method">
+        <button data-method="moncash" aria-label="Payer avec Moncash"><img src="img/moncash.png" alt="Moncash"></button>
+        <button data-method="natcash" aria-label="Payer avec Natcash"><img src="img/natcash.png" alt="Natcash"></button>
+        <button data-method="kashpaw" aria-label="Payer avec Kashpaw"><img src="img/kashpaw.png" alt="Kashpaw"></button>
       </div>
-
-      <div class="grid" id="plans">
-        <!-- Plan 3 jours -->
-        <section class="plan">
-          <div class="plan-header">
-            <div>
-              <div class="plan-title">3 jours</div>
-              <div class="plan-sub">Accès pendant 3 jours</div>
-            </div>
-            <div style="text-align:right">
-              <div class="price"><span class="price-value">100</span><span class="currency">HTG</span></div>
-            </div>
-          </div>
-          <div class="features">Durée : 3 jours<br>Nombre d'appareils : 1</div>
-          <div style="display:flex;gap:10px;align-items:center;justify-content:flex-start;margin-top:12px">
-             <a href="https://wa.me/Votre numero ici" class="buy" target="_blank">Acheter</a>
-          </div>
-        </section>
-
-        <!-- Plan 7 jours -->
-        <section class="plan">
-          <div class="plan-header">
-            <div>
-              <div class="plan-title">7 jours</div>
-              <div class="plan-sub">Accès pendant 7 jours</div>
-            </div>
-            <div style="text-align:right">
-              <div class="price"><span class="price-value">200</span><span class="currency">HTG</span></div>
-            </div>
-          </div>
-          <div class="features">Durée : 7 jours<br>Nombre d'appareils : 1</div>
-          <div style="display:flex;gap:10px;align-items:center;justify-content:flex-start;margin-top:12px">
-             <a href="https://wa.me/Votre numero ici" class="buy" target="_blank">Acheter</a>
-          </div>
-        </section>
-
-        <!-- Plan 15 jours -->
-        <section class="plan">
-          <div class="plan-header">
-            <div>
-              <div class="plan-title">15 jours</div>
-              <div class="plan-sub">Accès pendant 15 jours</div>
-            </div>
-            <div style="text-align:right">
-              <div class="price"><span class="price-value">500</span><span class="currency">HTG</span></div>
-            </div>
-          </div>
-          <div class="features">Durée : 15 jours<br>Nombre d'appareils : 1</div>
-          <div style="display:flex;gap:10px;align-items:center;justify-content:flex-start;margin-top:12px">
-             <a href="https://wa.me/Votre numero ici" class="buy" target="_blank">Acheter</a>
-          </div>
-        </section>
-
-        <!-- Plan 30 jours -->
-        <section class="plan">
-          <div class="plan-header">
-            <div>
-              <div class="plan-title">30 jours</div>
-              <div class="plan-sub">Accès pendant 30 jours</div>
-            </div>
-            <div style="text-align:right">
-              <div class="price"><span class="price-value">800</span><span class="currency">HTG</span></div>
-            </div>
-          </div>
-          <div class="features">Durée : 30 jours<br>Nombre d'appareils : 1</div>
-          <div style="display:flex;gap:10px;align-items:center;justify-content:flex-start;margin-top:12px">
-            <a href="https://wa.me/Votre numero ici" class="buy" target="_blank">Acheter</a>
-          </div>
-        </section>
-
-      </div>
-
-      <footer>© Christerlin Joseph, Développeur Web, Jr Pentester.</footer>
+      <button class="close" id="methodClose">Annuler</button>
     </div>
   </div>
+
+  <!-- Modale : suivi / résultat -->
+  <div class="overlay" id="statusOverlay">
+    <div class="modal" id="statusModal"></div>
+  </div>
+
+  <!-- Modale : plan personnalisé (envoi WhatsApp) -->
+  <div class="overlay" id="customOverlay">
+    <div class="modal">
+      <h3>Plan personnalisé</h3>
+      <p>Indiquez vos besoins ; nous vous communiquons le prix par WhatsApp.</p>
+      <div class="perforation on-overlay"></div>
+      <div class="field">
+        <label for="custDevices">Nombre d'appareils</label>
+        <input type="number" id="custDevices" min="1" value="1">
+      </div>
+      <div class="field">
+        <label>Durée</label>
+        <div style="display:flex;gap:8px">
+          <input type="number" id="custDuration" min="1" value="1" style="flex:1">
+          <select id="custUnit" style="flex:1">
+            <option value="jour(s)">Jour(s)</option>
+            <option value="semaine(s)">Semaine(s)</option>
+            <option value="mois">Mois</option>
+          </select>
+        </div>
+      </div>
+      <button class="buy" id="customSend">Envoyer par WhatsApp</button>
+      <button class="close" id="customClose">Annuler</button>
+    </div>
+  </div>
+
+  <!-- Modale : récupération par code (PIN) -->
+  <div class="overlay" id="retrieveOverlay">
+    <div class="modal">
+      <h3>Récupérer mon accès</h3>
+      <p>Entrez le code de récupération noté avant le paiement.</p>
+      <div class="perforation on-overlay"></div>
+      <div class="field">
+        <input type="text" id="retrievePin" placeholder="Ex : AB12CD" maxlength="10"
+               autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false"
+               style="text-align:center;letter-spacing:2px;text-transform:uppercase">
+      </div>
+      <button class="buy" id="retrieveSend">Récupérer</button>
+      <button class="close" id="retrieveClose">Annuler</button>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var BACKEND = (window.BACKEND_URL || "").replace(/\/$/, "");
+      var methodOverlay = document.getElementById("methodOverlay");
+      var methodSub = document.getElementById("methodSub");
+      var statusOverlay = document.getElementById("statusOverlay");
+      var statusModal = document.getElementById("statusModal");
+      var customOverlay = document.getElementById("customOverlay");
+      var retrieveOverlay = document.getElementById("retrieveOverlay");
+      var selectedPlan = null;
+      var pollTimer = null;
+      // Code de récupération de la commande en cours. Volontairement jamais
+      // affiché tant que tout se passe bien : le client ne doit pas le confondre
+      // avec son code d'accès. On ne le révèle qu'en cas de blocage.
+      var recoveryPin = null;
+
+      // Bloc "code de récupération", ajouté aux écrans d'échec uniquement.
+      function recoveryBlock() {
+        if (!recoveryPin) return "";
+        return (
+          '<div style="margin-top:16px;padding-top:14px;border-top:1px dotted var(--line)">' +
+          '<p style="font-size:13px;margin-bottom:6px">Notez ce code de récupération :</p>' +
+          '<div class="code" style="font-size:19px">' + recoveryPin + "</div>" +
+          '<p style="font-size:12px">Il permet de récupérer votre accès plus tard via « Déjà payé ? ».</p>' +
+          "</div>"
+        );
+      }
+
+      // Une seule fenêtre visible à la fois : on ferme les autres avant d'en ouvrir une.
+      var allOverlays = [methodOverlay, statusOverlay, customOverlay, retrieveOverlay];
+      function closeAllOverlays() {
+        allOverlays.forEach(function (o) { o.classList.remove("show"); });
+      }
+      function openOverlay(overlay) {
+        closeAllOverlays();
+        overlay.classList.add("show");
+      }
+
+      // Ouvre le choix de méthode pour un forfait (boutons avec data-plan).
+      document.querySelectorAll(".buy").forEach(function (btn) {
+        if (!btn.dataset.plan) return; // ignore le bouton "Personnaliser"
+        btn.addEventListener("click", function () {
+          selectedPlan = { id: btn.dataset.plan, label: btn.dataset.label };
+          methodSub.textContent = selectedPlan.label;
+          openOverlay(methodOverlay);
+        });
+      });
+
+      // --- Plan personnalisé -> demande de prix par WhatsApp ---
+      document.getElementById("customBtn").addEventListener("click", function () {
+        openOverlay(customOverlay);
+      });
+      document.getElementById("customClose").addEventListener("click", function () {
+        customOverlay.classList.remove("show");
+      });
+      document.getElementById("customSend").addEventListener("click", function () {
+        var devices = document.getElementById("custDevices").value || "1";
+        var duration = document.getElementById("custDuration").value || "1";
+        var unit = document.getElementById("custUnit").value;
+        var msg =
+          "Bonjour, je souhaite un plan personnalisé :\n" +
+          "- Nombre d'appareils : " + devices + "\n" +
+          "- Durée : " + duration + " " + unit + "\n" +
+          "Quel est le prix ?";
+        var url = "https://wa.me/" + window.WHATSAPP_NUMBER + "?text=" + encodeURIComponent(msg);
+        window.open(url, "_blank");
+        customOverlay.classList.remove("show");
+      });
+      document.getElementById("methodClose").addEventListener("click", function () {
+        methodOverlay.classList.remove("show");
+      });
+
+      // --- Récupération par code (PIN) ---
+      function openRetrieve() {
+        openOverlay(retrieveOverlay);
+        document.getElementById("retrievePin").focus();
+      }
+      document.getElementById("retrieveBtn").addEventListener("click", openRetrieve);
+      document.getElementById("retrieveClose").addEventListener("click", function () {
+        retrieveOverlay.classList.remove("show");
+      });
+      document.getElementById("retrieveSend").addEventListener("click", function () {
+        var pin = (document.getElementById("retrievePin").value || "").toUpperCase().replace(/\s+/g, "");
+        if (!pin) return;
+        retrieveOverlay.classList.remove("show");
+        pollRetrieve(pin);
+      });
+
+      // Choix d'une méthode -> création du paiement.
+      document.querySelectorAll("#methodOverlay .method button").forEach(function (b) {
+        b.addEventListener("click", function () {
+          startCheckout(selectedPlan, b.dataset.method);
+        });
+      });
+
+      function showStatus(html) {
+        statusModal.innerHTML = html;
+        openOverlay(statusOverlay);
+      }
+
+      // Annule le suivi en cours : arrête le polling, oublie la commande, ferme.
+      window.cancelPending = function () {
+        clearInterval(pollTimer);
+        localStorage.removeItem("pendingOrder");
+        closeAllOverlays();
+      };
+
+      async function startCheckout(plan, method) {
+        showStatus('<div class="spinner"></div><p>Redirection vers le paiement…</p><button class="close" onclick="cancelPending()">Annuler</button>');
+        try {
+          var res = await fetch(BACKEND + "/api/checkout", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ planId: plan.id, method: method }),
+          });
+          var data = await res.json();
+          if (!res.ok || !data.redirectUrl) throw new Error(data.error || "Échec");
+          // On mémorise la commande. Le code de récupération est gardé de côté
+          // mais PAS affiché : le client ne doit voir qu'un seul code, le sien.
+          // On ne le montrera qu'en cas de problème (voir showRecovery).
+          recoveryPin = data.retrievalPin || null;
+          localStorage.setItem("pendingOrder", JSON.stringify({
+            reference: data.reference,
+            claimToken: data.claimToken,
+            pin: recoveryPin,
+            label: plan.label,
+            ts: Date.now()
+          }));
+          // Direction le paiement, sans étape intermédiaire.
+          window.location.href = data.redirectUrl;
+        } catch (e) {
+          showStatus(
+            '<h3>Paiement indisponible</h3><p class="err">' +
+              (e.message || "Erreur") +
+              '</p><p>Vous pouvez nous contacter sur <a target="_blank" rel="noopener" href="https://wa.me/' +
+              window.WHATSAPP_NUMBER +
+              '">WhatsApp</a>.</p><button class="buy" onclick="location.reload()">Fermer</button>'
+          );
+        }
+      }
+
+      // Affiche l'écran de vérification (avec bouton manuel + annuler).
+      function showVerifying(label) {
+        showStatus(
+          '<div class="spinner"></div><h3>Vérification du paiement…</h3><p>' +
+            (label || "") +
+            '</p><p style="font-size:13px">Si vous avez payé, votre code apparaîtra dans un instant.</p>' +
+            '<button class="buy" onclick="checkNow()">Vérifier maintenant</button>' +
+            '<button class="close" onclick="cancelPending()">Annuler</button>'
+        );
+      }
+
+      // Affiche le code livré puis connecte automatiquement.
+      function showDelivered(code) {
+        clearInterval(pollTimer);
+        localStorage.removeItem("pendingOrder");
+        showStatus(
+          "<h3>Paiement confirmé</h3><p>Votre code d'accès :</p>" +
+            '<div class="code">' + code + "</div>" +
+            '<p>Connexion automatique en cours…</p><div class="spinner"></div>' +
+            '<p style="font-size:13px;margin-top:10px">Notez ce code pour vous reconnecter plus tard.</p>'
+        );
+        setTimeout(function () {
+          window.location = "login.html?code=" + encodeURIComponent(code);
+        }, 2500);
+      }
+
+      // Traite le résultat d'une vérification. Renvoie true si c'est terminé.
+      function handleResult(data) {
+        if (data && data.status === "DELIVERED" && data.voucherCode) {
+          showDelivered(data.voucherCode);
+          return true;
+        }
+        if (data && (data.status === "EXPIRED" || data.status === "FAILED")) {
+          clearInterval(pollTimer);
+          localStorage.removeItem("pendingOrder");
+          showStatus('<h3>Paiement non abouti</h3><p class="err">La commande a expiré ou a échoué.</p><button class="buy" onclick="location.reload()">Fermer</button>');
+          return true;
+        }
+        return false; // PENDING -> on continue
+      }
+
+      // Boucle de vérification générique. `doFetch` renvoie une promesse de réponse.
+      function startPolling(doFetch, label) {
+        var attempts = 0;
+        clearInterval(pollTimer);
+        async function runCheck() {
+          try {
+            var res = await doFetch();
+            handleResult(await res.json());
+          } catch (e) {
+            /* on réessaiera au prochain tick */
+          }
+        }
+        window.checkNow = function () { runCheck(); };
+        showVerifying(label);
+        runCheck(); // première vérification immédiate
+        pollTimer = setInterval(function () {
+          attempts++;
+          runCheck();
+          if (attempts > 60) {
+            clearInterval(pollTimer);
+            showStatus(
+              "<h3>Vérification en cours</h3><p>Si vous avez payé, votre code sera prêt sous peu.</p>" +
+                '<button class="buy" onclick="checkNow()">Vérifier maintenant</button>' +
+                recoveryBlock() +
+                '<button class="close" onclick="cancelPending()">Annuler</button>'
+            );
+          }
+        }, 3000);
+      }
+
+      // Suivi automatique par référence + claim token (retour de Pay'm).
+      function pollOrder(reference, claimToken, label) {
+        startPolling(function () {
+          return fetch(BACKEND + "/api/order/" + encodeURIComponent(reference), {
+            headers: { "x-claim-token": claimToken || "" },
+          });
+        }, label);
+      }
+
+      // Récupération manuelle par code court (PIN).
+      function pollRetrieve(pin) {
+        startPolling(function () {
+          return fetch(BACKEND + "/api/retrieve/" + encodeURIComponent(pin));
+        }, "Code : " + pin);
+      }
+
+      // Récupération automatique au retour de paiement (jeton de passation).
+      function pollHandoff(token) {
+        startPolling(function () {
+          return fetch(BACKEND + "/api/handoff/" + encodeURIComponent(token));
+        }, "Retour de paiement");
+      }
+
+      // Reprend le suivi d'une commande en attente (retour de Pay'm).
+      // Renvoie true si un suivi a effectivement repris (pour ne pas ouvrir
+      // une autre fenêtre par-dessus, ex. la saisie du PIN).
+      function resumePending() {
+        var pending = localStorage.getItem("pendingOrder");
+        if (!pending) return false;
+        try {
+          var o = JSON.parse(pending);
+          if (o && o.ts && Date.now() - o.ts > 20 * 60000) {
+            localStorage.removeItem("pendingOrder"); // trop vieux
+            return false;
+          } else if (o && o.reference) {
+            recoveryPin = o.pin || null; // disponible si le suivi finit par bloquer
+            pollOrder(o.reference, o.claimToken, o.label);
+            return true;
+          }
+        } catch (e) {
+          localStorage.removeItem("pendingOrder");
+        }
+        return false;
+      }
+      var query = new URLSearchParams(window.location.search);
+
+      // Retour de paiement : le backend (/return) nous remet un jeton de
+      // passation à durée de vie courte. On récupère le voucher tout seul, même
+      // si le navigateur a perdu sa session — le client n'a rien à saisir.
+      var handoff = query.get("t");
+      if (handoff) {
+        // On nettoie l'URL pour ne pas laisser le jeton dans l'historique.
+        if (window.history && window.history.replaceState) {
+          window.history.replaceState({}, "", "prix.html");
+        }
+        pollHandoff(handoff);
+        return;
+      }
+
+      var wasResumed = resumePending();
+      // Si la page est restaurée depuis le cache (bouton « retour »), on relance
+      // le suivi au lieu d'afficher l'écran figé « Redirection… ».
+      window.addEventListener("pageshow", function (e) {
+        if (e.persisted) resumePending();
+      });
+      // Lien « Déjà payé ? » depuis login.html -> ouvre la saisie du PIN, sauf si
+      // une commande est déjà en cours de suivi (on ne superpose pas les deux).
+      if (!wasResumed && query.get("retrieve") === "1") {
+        openRetrieve();
+      }
+    })();
+  </script>
 </body>
 </html>

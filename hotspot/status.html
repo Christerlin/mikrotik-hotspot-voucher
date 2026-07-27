@@ -2,27 +2,13 @@
 <html lang="ht">
 <head>
 <meta charset="utf-8">
-<title> Status De Connexion </title>
+<title>Statut de connexion</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="/favicon.ico">
+<link rel="stylesheet" href="css/theme.css">
 $(if refresh-timeout)
 <meta http-equiv="refresh" content="$(refresh-timeout-secs)">
 $(endif)
-<style>
-:root{
-  --bg:#0f172a;--card:#0f172a;--accent:#06b6d4;--accent2:#7c3aed;--muted:#94a3b8;--success:#0f766e
-}
-html,body{height:100%;margin:0;font-family:"Inter", system-ui, -apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial;color:#e6eef8;background:linear-gradient(180deg,#071029 0%,#0b1220 100%);display:flex;align-items:center;justify-content:center}
-.card{background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));border-radius:14px;padding:24px;box-shadow:0 10px 30px rgba(2,6,23,0.6);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,0.03);width:360px;text-align:center}
-h2{margin:0 0 10px;font-size:20px;font-weight:600;color:#fff}
-table{width:100%;border-collapse:collapse;margin-top:12px;color:#e6eef8;font-size:14px}
-td{padding:6px;text-align:left;border-bottom:1px solid rgba(255,255,255,0.1)}
-th{text-align:left;padding:6px;border-bottom:1px solid rgba(255,255,255,0.2)}
-.status{color:var(--accent2);font-weight:600}
-.logoff-btn{margin-top:18px;padding:10px 14px;border:none;border-radius:10px;background:linear-gradient(90deg,var(--accent),var(--accent2));color:#071029;font-weight:700;cursor:pointer;width:100%}
-.footer{margin-top:16px;font-size:12px;color:var(--muted);text-align:center}
-a,a:link,a:visited,a:active{color:var(--accent);text-decoration:none}
-a:hover{text-decoration:underline}
-</style>
 <script language="JavaScript">
 $(if advert-pending == 'yes')
 var popup='';
@@ -32,40 +18,86 @@ $(endif)
 function openLogout(){if(window.name!='hotspot_status') return true; open('$(link-logout)','hotspot_logout','toolbar=0,location=0,directories=0,status=0,menubars=0,resizable=1,width=280,height=250'); window.close(); return false;}
 </script>
 </head>
-<body $(if advert-pending == 'yes') onLoad="openAdvert()" $(endif)>
+<body class="page mood-ok" $(if advert-pending == 'yes') onLoad="openAdvert()" $(endif)>
 
-<div class="card">
-  <h2>Status</h2>
-  <table>
-    $(if login-by == 'trial')
-      <tr><td colspan="2" class="status">Welcome trial user!</td></tr>
-    $(elif login-by != 'mac')
-      <tr><td colspan="2" class="status">Welcome $(username)!</td></tr>
-    $(endif)
-    <tr><td>IP address:</td><td>$(ip)</td></tr>
-    <tr><td>Bytes up/down:</td><td>$(bytes-in-nice) / $(bytes-out-nice)</td></tr>
+<div class="ticket" style="text-align:center">
+  <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px">
+    <div style="text-align:left">
+      <div class="eyebrow">LambdaWifi &middot; Carte d'embarquement</div>
+      <div class="h1">
+        $(if login-by == 'trial')Accès d'essai
+        $(elif login-by != 'mac')Bienvenue $(username)
+        $(else)Connecté
+        $(endif)
+      </div>
+    </div>
+    <div class="stamp">EN<br>LIGNE</div>
+  </div>
+
+  <div class="perforation"></div>
+
+  <div class="manifest" style="text-align:left">
+    <div class="row"><span class="k">Adresse IP</span><span class="v">$(ip)</span></div>
+    <div class="row"><span class="k">Données ↑ / ↓</span><span class="v">$(bytes-in-nice) / $(bytes-out-nice)</span></div>
     $(if session-time-left)
-      <tr><td>Connected / left:</td><td>$(uptime) / $(session-time-left)</td></tr>
+      <div class="row"><span class="k">Connecté depuis</span><span class="v">$(uptime)</span></div>
+      <div class="row highlight"><span class="k">Temps restant</span><span class="v" id="timeLeft">$(session-time-left)</span></div>
     $(else)
-      <tr><td>Connected:</td><td>$(uptime)</td></tr>
+      <div class="row"><span class="k">Connecté depuis</span><span class="v">$(uptime)</span></div>
     $(endif)
     $(if blocked == 'yes')
-      <tr><td>Status:</td><td><div style="color:#FF8080"><a href="$(link-advert)" target="hotspot_advert">Advertisement required</a></div></td></tr>
+      <div class="row"><span class="k">Statut</span><span class="v"><a href="$(link-advert)" target="hotspot_advert" style="color:var(--danger)">Publicité requise</a></span></div>
     $(elif refresh-timeout)
-      <tr><td>Status refresh:</td><td>$(refresh-timeout)</td></tr>
+      <div class="row"><span class="k">Actualisation</span><span class="v">$(refresh-timeout)</span></div>
     $(endif)
-  </table>
+  </div>
 
   $(if login-by-mac != 'yes')
     <form action="$(link-logout)" name="logout" onSubmit="return openLogout()">
-      <input type="submit" class="logoff-btn" value="Log Off">
+      <button class="buy" type="submit">Se déconnecter</button>
     </form>
   $(endif)
 
-  <div class="footer">
-    © Christerlin Joseph, Développeur Web, Jr Pentester.
-  </div>
+  <footer class="credit">© Codemi</footer>
 </div>
+
+<script type="text/javascript">
+  (function () {
+    var el = document.getElementById('timeLeft');
+    if (!el) return;
+    // Konvèti fòma tan MikroTik (pa egz. "1w2d03:04:05", "23:59:00", "1h2m3s") an segond
+    function toSeconds(str) {
+      str = (str || '').trim();
+      var total = 0, m;
+      var units = { w: 604800, d: 86400, h: 3600, m: 60, s: 1 };
+      var re = /(\d+)([wdhms])/g;
+      while ((m = re.exec(str)) !== null) { total += parseInt(m[1], 10) * units[m[2]]; }
+      if (total === 0) {
+        var parts = str.split(':').map(Number);
+        if (parts.length === 3 && parts.every(function (n) { return !isNaN(n); })) {
+          total = parts[0] * 3600 + parts[1] * 60 + parts[2];
+        } else if (parts.length === 2 && parts.every(function (n) { return !isNaN(n); })) {
+          total = parts[0] * 60 + parts[1];
+        }
+      }
+      return total;
+    }
+    function format(sec) {
+      var d = Math.floor(sec / 86400); sec %= 86400;
+      var h = Math.floor(sec / 3600); sec %= 3600;
+      var mn = Math.floor(sec / 60); var s = sec % 60;
+      function p(n) { return (n < 10 ? '0' : '') + n; }
+      return (d > 0 ? d + 'j ' : '') + p(h) + ':' + p(mn) + ':' + p(s);
+    }
+    var remaining = toSeconds(el.textContent);
+    if (remaining <= 0) return; // fòma pa rekonèt : kite valè sèvè a
+    setInterval(function () {
+      remaining -= 1;
+      if (remaining <= 0) { remaining = 0; el.textContent = '00:00:00'; return; }
+      el.textContent = format(remaining);
+    }, 1000);
+  })();
+</script>
 
 </body>
 </html>

@@ -1,0 +1,9 @@
+# Fichiers systeme
+.DS_Store
+
+# Valeurs locales / secrets — JAMAIS versionnes.
+# Copiez les fichiers .example correspondants et remplissez vos valeurs.
+hotspot/config.js
+routers/**/paym-pull-agent.rsc
+payment-backend/.env
+node_modules/
