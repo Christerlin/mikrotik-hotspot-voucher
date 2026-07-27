@@ -11,6 +11,9 @@
 # L009 (ether2 à ether5). Les clients WiFi tombent alors directement sur
 # le réseau hotspot 172.17.10.0/24 et voient le portail.
 #
+# EXEMPLE : copiez ce fichier vers hap-lite-ap.rsc (non versionné) et
+# remplacez CHANGEZ_MOI par un vrai mot de passe admin.
+#
 # À appliquer sur un hAP lite remis à zéro :
 #    /system reset-configuration no-defaults=yes skip-backup=yes
 #    (le routeur redémarre, puis) /import hap-lite-ap.rsc
@@ -49,8 +52,10 @@ set name=LambdaWifi-AP
 /system clock
 set time-zone-name=America/Port-au-Prince
 
-# SÉCURITÉ : mettez un mot de passe admin AVANT de brancher l'AP :
-#   /user set admin password=VOTRE_MOT_DE_PASSE_FORT
+# --- 6. SÉCURITÉ : mot de passe admin (obligatoire avant de brancher) --------
+/user
+set admin password=CHANGEZ_MOI
+
 #
 # Notes :
 #  - Plusieurs hAP lite peuvent être branchés (un par zone à couvrir) avec

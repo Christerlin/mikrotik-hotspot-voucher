@@ -42,7 +42,7 @@ port à ouvrir, aucune IP publique nécessaire.
    [`routers/L009UiGS-RM/paym-pull-agent.example.rsc`](routers/L009UiGS-RM/paym-pull-agent.example.rsc)
    vers `paym-pull-agent.rsc`, remplacez `<BACKEND>` et `<TOKEN>`, importez-le.
 5. **WiFi** : branchez un hAP lite configuré avec
-   [`routers/hAP-lite/hap-lite-ap.rsc`](routers/hAP-lite/hap-lite-ap.rsc)
+   [`routers/hAP-lite/hap-lite-ap.example.rsc`](routers/hAP-lite/hap-lite-ap.example.rsc)
    sur un port du bridge hotspot.
 
 Le guide complet (avec le dépannage réel : walled-garden par IP, DNS,
@@ -59,6 +59,7 @@ numéro WhatsApp) ne sont **jamais** committées (voir `.gitignore`) :
 |---|---|
 | `hotspot/config.js` | `hotspot/config.example.js` |
 | `routers/L009UiGS-RM/paym-pull-agent.rsc` | `paym-pull-agent.example.rsc` |
+| `routers/hAP-lite/hap-lite-ap.rsc` | `hap-lite-ap.example.rsc` |
 | `payment-backend/.env` | `payment-backend/.env.example` |
 
 ## 🤝 Contribution
