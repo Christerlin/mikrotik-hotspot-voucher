@@ -24,7 +24,7 @@ port à ouvrir, aucune IP publique nécessaire.
 | [`hotspot/`](hotspot/) | Le portail (pages HTML/CSS à copier dans `/flash/hotspot/`) |
 | [`payment-backend/`](payment-backend/) | Backend Node.js (Pay'm + livraison des vouchers), à déployer sur Render/Railway |
 | [`routers/L009UiGS-RM/`](routers/L009UiGS-RM/) | Config du routeur principal (hotspot, DHCP, NAT) + agent de paiement |
-| [`routers/hAP-lite/`](routers/hAP-lite/) | Config du hAP lite en point d'accès WiFi transparent |
+| [`routers/hAP-lite/`](routers/hAP-lite/) | Configs hAP lite : point d'accès WiFi transparent, ou hotspot autonome (petit commerce) |
 | [`doc/`](doc/) | Guide de déploiement pas à pas + notes d'intégration Pay'm (testées en production) |
 
 ## Démarrage rapide
@@ -60,7 +60,9 @@ numéro WhatsApp) ne sont **jamais** committées (voir `.gitignore`) :
 | `hotspot/config.js` | `hotspot/config.example.js` |
 | `routers/L009UiGS-RM/paym-pull-agent.rsc` | `paym-pull-agent.example.rsc` |
 | `routers/hAP-lite/hap-lite-ap.rsc` | `hap-lite-ap.example.rsc` |
+| `routers/hAP-lite/hap-lite-captive.rsc` | `hap-lite-captive.example.rsc` |
 | `payment-backend/.env` | `payment-backend/.env.example` |
+| `local/` (portails dérivés par business) | — |
 
 ## 🤝 Contribution
 Les contributions sont les bienvenues ! Vous pouvez proposer des améliorations

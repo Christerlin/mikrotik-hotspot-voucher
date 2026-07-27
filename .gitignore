@@ -7,4 +7,8 @@ hotspot/config.js
 routers/**/paym-pull-agent.rsc
 routers/hAP-lite/hap-lite-ap.rsc
 payment-backend/.env
+
+# Personnalisations par business (portails derives, configs avec vrais
+# mots de passe / numeros) — jamais versionnees.
+local/
 node_modules/
