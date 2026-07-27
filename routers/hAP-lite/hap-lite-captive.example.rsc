@@ -7,7 +7,8 @@
 # WiFi, le DHCP, le NAT et le portail voucher. Utilisable seul, pour un petit commerce.
 #
 # Branchement :  ether1 = INTERNET (box/Starlink/partage)
-#                ether2-4 + WiFi = clients hotspot
+#                ether2-3 + WiFi = clients hotspot (portail captif)
+#                ether4 = port LIBRE (internet direct + gestion, sans portail)
 #
 # À appliquer sur un hAP lite remis à zéro :
 #    /system reset-configuration no-defaults=yes skip-backup=yes
@@ -32,8 +33,8 @@ set [ find default-name=wlan1 ] mode=ap-bridge ssid="MonHotspot" \
 /interface bridge port
 add bridge=hs-bridge interface=ether2
 add bridge=hs-bridge interface=ether3
-add bridge=hs-bridge interface=ether4
 add bridge=hs-bridge interface=wlan1
+# (ether4 volontairement HORS du bridge : port libre, voir section 3b)
 
 # --- 3. Adressage / DHCP -----------------------------------------------------
 # Sous-réseau distinct de LambdaWifi (172.17.10.x) pour éviter tout conflit.
@@ -45,6 +46,16 @@ add name=hs-pool ranges=172.20.10.2-172.20.10.254
 add address-pool=hs-pool interface=hs-bridge name=hs-dhcp disabled=no
 /ip dhcp-server network
 add address=172.20.10.0/24 gateway=172.20.10.1 dns-server=172.20.10.1
+
+# --- 3b. Port LIBRE (ether4) : internet direct + gestion, sans portail -------
+/ip address
+add address=192.168.88.1/24 interface=ether4 network=192.168.88.0
+/ip pool
+add name=free-pool ranges=192.168.88.10-192.168.88.100
+/ip dhcp-server
+add address-pool=free-pool interface=ether4 name=free-dhcp disabled=no
+/ip dhcp-server network
+add address=192.168.88.0/24 gateway=192.168.88.1 dns-server=192.168.88.1
 
 # Internet par ether1 (DHCP client)
 /ip dhcp-client
