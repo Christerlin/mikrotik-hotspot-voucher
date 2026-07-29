@@ -1,8 +1,8 @@
 # =====================================================================
-# HelloConnect — Configuration pour L009UiGS-RM  (SANS WiFi)
+# Lambda Network — Configuration pour L009UiGS-RM  (SANS WiFi)
 # RouterOS v7
 #
-# Basé sur hello-connect-v3.rsc, adapté au modèle RM (pas de radio WiFi) :
+# Adapté au modèle RM (pas de radio WiFi) :
 #   - lignes /interface wifi retirées
 #   - mot de passe ajouté au compte admin509 (sinon accès gratuit possible)
 #   - client NTP activé (pas de RTC : indispensable après une coupure de courant)
@@ -13,7 +13,7 @@
 #
 # À appliquer sur un routeur remis à zéro :
 #    /system reset-configuration no-defaults=yes skip-backup=yes
-#    (le routeur redémarre, puis) /import hello-connect-L009-RM.rsc
+#    (le routeur redémarre, puis) /import lambda-network-L009-RM.rsc
 # =====================================================================
 
 /interface bridge
@@ -82,7 +82,7 @@ set enabled=yes
 add address=pool.ntp.org
 
 /system identity
-set name=HelloConnect
+set name=LambdaNetwork
 
 # =====================================================================
 # ÉTAPES SUIVANTES (après import)

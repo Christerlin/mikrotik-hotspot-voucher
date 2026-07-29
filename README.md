@@ -30,7 +30,7 @@ port à ouvrir, aucune IP publique nécessaire.
 ## Démarrage rapide
 
 1. **Routeur principal** (L009UiGS-RM ou similaire) :
-   importez [`routers/L009UiGS-RM/hello-connect-L009-RM.rsc`](routers/L009UiGS-RM/hello-connect-L009-RM.rsc)
+   importez [`routers/L009UiGS-RM/lambda-network-L009-RM.rsc`](routers/L009UiGS-RM/lambda-network-L009-RM.rsc)
    sur un routeur remis à zéro.
 2. **Backend** : déployez [`payment-backend/`](payment-backend/) sur Render
    (voir [`doc/DEPLOIEMENT-paiement.md`](doc/DEPLOIEMENT-paiement.md)) et
