@@ -213,25 +213,57 @@
         fetch(BACKEND + "/api/portal/" + encodeURIComponent(slug) + "/plans")
           .then(function (r) { return r.ok ? r.json() : null; })
           .then(function (plans) {
-            if (!plans || !plans.length) return;
+            if (!Array.isArray(plans) || !plans.length) return;
             var grid = document.getElementById("plans");
             var custom = document.getElementById("customBtn");
             var customCard = custom ? custom.closest("section") : null;
-            grid.innerHTML = plans.map(function (p) {
-              var devices = p.devices > 1
-                ? p.devices + " appareils connectés"
-                : "1 appareil connecté";
-              return '<section class="ticket">' +
-                '<div class="plan-head"><div>' +
-                  '<div class="plan-name">' + p.label + '</div>' +
-                  '<div class="plan-desc">Accès pendant ' + p.label.toLowerCase() + '</div>' +
-                '</div>' +
-                '<div class="plan-price">' + p.htg + '<span class="cur">HTG</span></div></div>' +
-                '<div class="plan-features">' + devices + '</div>' +
-                '<button class="buy" data-plan="' + p.id + '" data-label="' +
-                  p.label + ' · ' + p.htg + ' HTG">Payer en ligne</button>' +
-                '</section>';
-            }).join("");
+
+            // Construction par le DOM, jamais par concaténation de HTML : les
+            // libellés viennent du dashboard, et cette page manipule de l'argent.
+            function el(tag, cls, text) {
+              var n = document.createElement(tag);
+              if (cls) n.className = cls;
+              if (text != null) n.textContent = text;
+              return n;
+            }
+
+            var cards = [];
+            plans.forEach(function (p) {
+              // On écarte tout forfait mal formé plutôt que de l'afficher.
+              var id = String(p.id == null ? "" : p.id);
+              var htg = Number(p.htg);
+              if (!/^[A-Za-z0-9_-]{1,32}$/.test(id)) return;
+              if (!isFinite(htg) || htg <= 0) return;
+              var label = String(p.label == null ? id : p.label);
+              var devices = Number(p.devices) > 1 ? Number(p.devices) : 1;
+
+              var section = el("section", "ticket");
+
+              var head = el("div", "plan-head");
+              var left = document.createElement("div");
+              left.appendChild(el("div", "plan-name", label));
+              left.appendChild(el("div", "plan-desc", "Accès pendant " + label.toLowerCase()));
+              head.appendChild(left);
+
+              var price = el("div", "plan-price", String(htg));
+              price.appendChild(el("span", "cur", "HTG"));
+              head.appendChild(price);
+              section.appendChild(head);
+
+              section.appendChild(el("div", "plan-features",
+                devices > 1 ? devices + " appareils connectés" : "1 appareil connecté"));
+
+              var btn = el("button", "buy", "Payer en ligne");
+              btn.setAttribute("data-plan", id);
+              btn.setAttribute("data-label", label + " · " + htg + " HTG");
+              section.appendChild(btn);
+
+              cards.push(section);
+            });
+            if (!cards.length) return; // rien d'exploitable : on garde le statique
+
+            grid.textContent = "";
+            cards.forEach(function (c) { grid.appendChild(c); });
             if (customCard) grid.appendChild(customCard); // garder "Personnalisé"
             grid.dataset.source = "manager";
           })
