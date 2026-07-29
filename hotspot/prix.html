@@ -269,7 +269,7 @@
           var res = await fetch(BACKEND + "/api/checkout", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ planId: plan.id, method: method }),
+            body: JSON.stringify({ planId: plan.id, method: method, routerSlug: window.ROUTER_SLUG || "" }),
           });
           var data = await res.json();
           if (!res.ok || !data.redirectUrl) throw new Error(data.error || "Échec");

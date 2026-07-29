@@ -14,3 +14,8 @@ window.BACKEND_URL = "https://VOTRE-BACKEND.onrender.com";
 // Numéro WhatsApp (format international sans + ni espaces, ex : 509XXXXXXXX).
 // Utilisé pour le plan personnalisé et comme secours si le paiement échoue.
 window.WHATSAPP_NUMBER = "509XXXXXXXX";
+
+// Slug du routeur (seulement si vous utilisez mikrovoucher-manager :
+// https://github.com/Christerlin/mikrovoucher-manager). Identifie ce routeur
+// auprès du manager multi-routeurs. Ignoré par le backend simple.
+window.ROUTER_SLUG = "";
