@@ -25,7 +25,7 @@
       <button class="buy" id="retrieveBtn" style="width:auto;background:transparent;color:var(--accent);box-shadow:none;border:2px solid var(--line)">Déjà payé ?</button>
     </div>
 
-    <div class="ticket-grid" id="plans">
+    <div class="ticket-grid" id="plans" data-source="static">
       <!-- Plan 3 jours -->
       <section class="ticket">
         <div class="plan-head">
@@ -195,14 +195,48 @@
       }
 
       // Ouvre le choix de méthode pour un forfait (boutons avec data-plan).
-      document.querySelectorAll(".buy").forEach(function (btn) {
-        if (!btn.dataset.plan) return; // ignore le bouton "Personnaliser"
-        btn.addEventListener("click", function () {
-          selectedPlan = { id: btn.dataset.plan, label: btn.dataset.label };
-          methodSub.textContent = selectedPlan.label;
-          openOverlay(methodOverlay);
-        });
+      // Délégué : fonctionne aussi pour les forfaits chargés dynamiquement.
+      document.addEventListener("click", function (e) {
+        var btn = e.target.closest ? e.target.closest(".buy[data-plan]") : null;
+        if (!btn) return;
+        selectedPlan = { id: btn.dataset.plan, label: btn.dataset.label };
+        methodSub.textContent = selectedPlan.label;
+        openOverlay(methodOverlay);
       });
+
+      // Forfaits : source de vérité = le gestionnaire (dashboard). Les cartes
+      // écrites dans la page ne servent que de repli si l'API est injoignable,
+      // pour ne jamais afficher un prix différent de celui qui sera débité.
+      (function loadPlans() {
+        var slug = window.ROUTER_SLUG || "";
+        if (!slug || !BACKEND) return; // pas de manager : on garde le statique
+        fetch(BACKEND + "/api/portal/" + encodeURIComponent(slug) + "/plans")
+          .then(function (r) { return r.ok ? r.json() : null; })
+          .then(function (plans) {
+            if (!plans || !plans.length) return;
+            var grid = document.getElementById("plans");
+            var custom = document.getElementById("customBtn");
+            var customCard = custom ? custom.closest("section") : null;
+            grid.innerHTML = plans.map(function (p) {
+              var devices = p.devices > 1
+                ? p.devices + " appareils connectés"
+                : "1 appareil connecté";
+              return '<section class="ticket">' +
+                '<div class="plan-head"><div>' +
+                  '<div class="plan-name">' + p.label + '</div>' +
+                  '<div class="plan-desc">Accès pendant ' + p.label.toLowerCase() + '</div>' +
+                '</div>' +
+                '<div class="plan-price">' + p.htg + '<span class="cur">HTG</span></div></div>' +
+                '<div class="plan-features">' + devices + '</div>' +
+                '<button class="buy" data-plan="' + p.id + '" data-label="' +
+                  p.label + ' · ' + p.htg + ' HTG">Payer en ligne</button>' +
+                '</section>';
+            }).join("");
+            if (customCard) grid.appendChild(customCard); // garder "Personnalisé"
+            grid.dataset.source = "manager";
+          })
+          .catch(function () { /* repli : cartes statiques déjà affichées */ });
+      })();
 
       // --- Plan personnalisé -> demande de prix par WhatsApp ---
       document.getElementById("customBtn").addEventListener("click", function () {
