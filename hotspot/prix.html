@@ -25,57 +25,12 @@
       <button class="buy" id="retrieveBtn" style="width:auto;background:transparent;color:var(--accent);box-shadow:none;border:2px solid var(--line)">Déjà payé ?</button>
     </div>
 
-    <div class="ticket-grid" id="plans" data-source="static">
-      <!-- Plan 3 jours -->
-      <section class="ticket">
-        <div class="plan-head">
-          <div>
-            <div class="plan-name">3 jours</div>
-            <div class="plan-desc">Accès pendant 3 jours</div>
-          </div>
-          <div class="plan-price">100<span class="cur">HTG</span></div>
-        </div>
-        <div class="plan-features">1 appareil connecté</div>
-        <button class="buy" data-plan="3j" data-label="3 jours – 100 HTG">Payer en ligne</button>
-      </section>
-
-      <!-- Plan 7 jours -->
-      <section class="ticket">
-        <div class="plan-head">
-          <div>
-            <div class="plan-name">7 jours</div>
-            <div class="plan-desc">Accès pendant 7 jours</div>
-          </div>
-          <div class="plan-price">200<span class="cur">HTG</span></div>
-        </div>
-        <div class="plan-features">1 appareil connecté</div>
-        <button class="buy" data-plan="7j" data-label="7 jours – 200 HTG">Payer en ligne</button>
-      </section>
-
-      <!-- Plan 15 jours -->
-      <section class="ticket">
-        <div class="plan-head">
-          <div>
-            <div class="plan-name">15 jours</div>
-            <div class="plan-desc">Accès pendant 15 jours</div>
-          </div>
-          <div class="plan-price">500<span class="cur">HTG</span></div>
-        </div>
-        <div class="plan-features">1 appareil connecté</div>
-        <button class="buy" data-plan="15j" data-label="15 jours – 500 HTG">Payer en ligne</button>
-      </section>
-
-      <!-- Plan 30 jours -->
-      <section class="ticket">
-        <div class="plan-head">
-          <div>
-            <div class="plan-name">30 jours</div>
-            <div class="plan-desc">Accès pendant 30 jours</div>
-          </div>
-          <div class="plan-price">800<span class="cur">HTG</span></div>
-        </div>
-        <div class="plan-features">1 appareil connecté</div>
-        <button class="buy" data-plan="30j" data-label="30 jours – 800 HTG">Payer en ligne</button>
+    <div class="ticket-grid" id="plans">
+      <!-- Les forfaits viennent du gestionnaire : ils ne sont jamais écrits ici,
+           sinon un forfait retiré du dashboard resterait proposé au client. -->
+      <section class="ticket" id="plansLoading">
+        <div class="plan-name">Chargement des tarifs…</div>
+        <div class="plan-desc">Un instant.</div>
       </section>
 
       <!-- Plan personnalisé -->
@@ -204,22 +159,66 @@
         openOverlay(methodOverlay);
       });
 
-      // Forfaits : source de vérité = le gestionnaire (dashboard). Les cartes
-      // écrites dans la page ne servent que de repli si l'API est injoignable,
-      // pour ne jamais afficher un prix différent de celui qui sera débité.
+      // Forfaits : seul le gestionnaire fait foi. Rien n'est écrit en dur ici —
+      // un tarif retiré du dashboard doit disparaître du portail, et si le
+      // gestionnaire est injoignable le client ne peut de toute façon pas payer :
+      // mieux vaut le dire que d'afficher des forfaits inachetables.
       (function loadPlans() {
-        var slug = window.ROUTER_SLUG || "";
-        if (!slug || !BACKEND) return; // pas de manager : on garde le statique
-        fetch(BACKEND + "/api/portal/" + encodeURIComponent(slug) + "/plans")
-          .then(function (r) { return r.ok ? r.json() : null; })
-          .then(function (plans) {
-            if (!Array.isArray(plans) || !plans.length) return;
-            var grid = document.getElementById("plans");
-            var custom = document.getElementById("customBtn");
-            var customCard = custom ? custom.closest("section") : null;
+        var grid = document.getElementById("plans");
+        var attente = document.getElementById("plansLoading");
+        var custom = document.getElementById("customBtn");
+        var customCard = custom ? custom.closest("section") : null;
 
-            // Construction par le DOM, jamais par concaténation de HTML : les
-            // libellés viennent du dashboard, et cette page manipule de l'argent.
+        function message(titre, texte) {
+          var s = document.createElement("section");
+          s.className = "ticket";
+          var t = document.createElement("div");
+          t.className = "plan-name";
+          t.textContent = titre;
+          var d = document.createElement("div");
+          d.className = "plan-desc";
+          d.textContent = texte;
+          s.appendChild(t);
+          s.appendChild(d);
+          if (window.WHATSAPP_NUMBER) {
+            var a = document.createElement("a");
+            a.className = "buy";
+            a.style.marginTop = "14px";
+            a.target = "_blank";
+            a.rel = "noopener";
+            a.href = "https://wa.me/" + window.WHATSAPP_NUMBER;
+            a.textContent = "Nous contacter";
+            s.appendChild(a);
+          }
+          return s;
+        }
+
+        function poser(elements) {
+          grid.textContent = "";
+          elements.forEach(function (e) { grid.appendChild(e); });
+          if (customCard) grid.appendChild(customCard);
+        }
+
+        var slug = window.ROUTER_SLUG || "";
+        if (!slug || !BACKEND) {
+          poser([message("Tarifs indisponibles", "Le portail n'est pas configuré.")]);
+          return;
+        }
+
+        fetch(BACKEND + "/api/portal/" + encodeURIComponent(slug) + "/plans")
+          .then(function (r) {
+            if (!r.ok) throw new Error("indisponible");
+            return r.json();
+          })
+          .then(function (plans) {
+            if (!Array.isArray(plans)) throw new Error("réponse inattendue");
+            if (plans.length === 0) {
+              // Réponse valide : il n'y a simplement aucun forfait en vente.
+              poser([message("Aucun forfait en vente",
+                "Les tarifs ne sont pas disponibles pour le moment.")]);
+              return;
+            }
+
             function el(tag, cls, text) {
               var n = document.createElement(tag);
               if (cls) n.className = cls;
@@ -229,7 +228,6 @@
 
             var cards = [];
             plans.forEach(function (p) {
-              // On écarte tout forfait mal formé plutôt que de l'afficher.
               var id = String(p.id == null ? "" : p.id);
               var htg = Number(p.htg);
               if (!/^[A-Za-z0-9_-]{1,32}$/.test(id)) return;
@@ -238,7 +236,6 @@
               var devices = Number(p.devices) > 1 ? Number(p.devices) : 1;
 
               var section = el("section", "ticket");
-
               var head = el("div", "plan-head");
               var left = document.createElement("div");
               left.appendChild(el("div", "plan-name", label));
@@ -257,17 +254,18 @@
               btn.setAttribute("data-plan", id);
               btn.setAttribute("data-label", label + " · " + htg + " HTG");
               section.appendChild(btn);
-
               cards.push(section);
             });
-            if (!cards.length) return; // rien d'exploitable : on garde le statique
 
-            grid.textContent = "";
-            cards.forEach(function (c) { grid.appendChild(c); });
-            if (customCard) grid.appendChild(customCard); // garder "Personnalisé"
-            grid.dataset.source = "manager";
+            poser(cards.length
+              ? cards
+              : [message("Aucun forfait en vente",
+                  "Les tarifs ne sont pas disponibles pour le moment.")]);
           })
-          .catch(function () { /* repli : cartes statiques déjà affichées */ });
+          .catch(function () {
+            poser([message("Tarifs momentanément indisponibles",
+              "Réessayez dans un instant.")]);
+          });
       })();
 
       // --- Plan personnalisé -> demande de prix par WhatsApp ---
