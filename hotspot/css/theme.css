@@ -5,27 +5,30 @@
    ===================================================================== */
 
 :root{
-  /* Papier / encre — palette chaude, inspirée d'un billet imprimé */
-  --paper:      #f2e6cf;
-  --card:       #fffaf0;
-  --stub:       #ecdcb8;
-  --ink:        #241b13;
-  --ink-soft:   #8a7455;
-  --line:       #d9c49b;
+  /* Mêmes couleurs que le thème clair du tableau de bord, pour que portail
+     et gestion se lisent comme un seul produit. Palette validée (contraste,
+     bande de clarté, écart perceptuel des statuts) — ne pas retoucher à
+     l'oeil. Fond clair volontaire : le portail se consulte dehors. */
+  --paper:      #eef2ef;
+  --card:       #ffffff;
+  --stub:       #e3ebe6;
+  --ink:        #111c17;
+  --ink-soft:   #5c7268;
+  --line:       #dde5e0;
 
   /* Action — couleur constante pour tous les boutons/CTA */
-  --accent:      #c2410c;
-  --accent-dark: #9a3412;
-  --accent-ink:  #fff8ef;
+  --accent:      #16a34a;
+  --accent-dark: #15803d;
+  --accent-ink:  #ffffff;
 
   /* "Humeur" du tampon d'état — change selon la page, coeur du système
      reste identique (voir classes .mood-* plus bas) */
   --mood:      var(--accent);
   --mood-dark: var(--accent-dark);
 
-  --danger: #9c2b1f;
+  --danger: #e11d48;
 
-  --overlay-bg: rgba(36,27,19,.55);
+  --overlay-bg: rgba(17,28,23,.55);
 
   --font-display: Georgia, 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', 'Times New Roman', serif;
   --font-label:   -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
@@ -34,11 +37,13 @@
   --radius: 20px;
 }
 
-/* Humeurs (accents contextuels du tampon, ne changent pas les boutons) */
-.mood-ok{      --mood:#0d6b52; --mood-dark:#0a5743; }
-.mood-warn{    --mood:#b45309; --mood-dark:#92400e; }
-.mood-error{   --mood:#9c2b1f; --mood-dark:#7a2117; }
-.mood-neutral{ --mood:#6b5a3e; --mood-dark:#54452f; }
+/* Humeurs (accents contextuels du tampon, ne changent pas les boutons).
+   Le vert étant la couleur d'action, les états prennent d'autres teintes :
+   un tampon vert se lirait comme un bouton. */
+.mood-ok{      --mood:#0891b2; --mood-dark:#0e7490; }
+.mood-warn{    --mood:#d97706; --mood-dark:#b45309; }
+.mood-error{   --mood:#e11d48; --mood-dark:#be123c; }
+.mood-neutral{ --mood:#5c7268; --mood-dark:#44554d; }
 
 *{ box-sizing:border-box }
 
@@ -58,7 +63,7 @@ body.page{
   background-color:var(--paper);
   /* Grain de papier — texture en pur CSS, aucune image requise */
   background-image:
-    radial-gradient(rgba(36,27,19,.05) 1px, transparent 1.2px);
+    radial-gradient(rgba(17,28,23,.04) 1px, transparent 1.2px);
   background-size:15px 15px;
 }
 
@@ -76,7 +81,7 @@ a:hover{ color:var(--accent-dark); text-decoration:underline }
   background:var(--card);
   border:1px solid var(--line);
   border-radius:var(--radius);
-  box-shadow:0 1px 2px rgba(36,27,19,.06), 0 24px 48px -16px rgba(36,27,19,.28);
+  box-shadow:0 1px 2px rgba(17,28,23,.05), 0 20px 40px -16px rgba(17,28,23,.18);
   padding:30px 28px;
   animation:ticketIn .55s cubic-bezier(.22,1,.36,1) both;
 }
@@ -178,7 +183,7 @@ a:hover{ color:var(--accent-dark); text-decoration:underline }
 }
 .field input:focus,.field select:focus{
   border-color:var(--accent);
-  box-shadow:0 0 0 3px rgba(194,65,12,.16);
+  box-shadow:0 0 0 3px rgba(22,163,74,.18);
 }
 
 .voucher-input input{
@@ -193,13 +198,13 @@ a:hover{ color:var(--accent-dark); text-decoration:underline }
   border-radius:12px;
   outline:none;
   background:
-    repeating-linear-gradient(90deg, transparent, transparent 6px, rgba(36,27,19,.04) 6px, rgba(36,27,19,.04) 7px);
+    repeating-linear-gradient(90deg, transparent, transparent 6px, rgba(17,28,23,.04) 6px, rgba(17,28,23,.04) 7px);
   color:var(--ink);
   transition:border-color .2s, box-shadow .2s;
 }
 .voucher-input input:focus{
   border-color:var(--accent);
-  box-shadow:0 0 0 3px rgba(194,65,12,.14);
+  box-shadow:0 0 0 3px rgba(22,163,74,.16);
 }
 
 /* --------------------------------------------------------------------
@@ -266,7 +271,7 @@ a:hover{ color:var(--accent-dark); text-decoration:underline }
   letter-spacing:.3em;
   text-indent:.3em;
   color:var(--ink);
-  background:repeating-linear-gradient(90deg, transparent, transparent 6px, rgba(36,27,19,.05) 6px, rgba(36,27,19,.05) 7px);
+  background:repeating-linear-gradient(90deg, transparent, transparent 6px, rgba(17,28,23,.05) 6px, rgba(17,28,23,.05) 7px);
   border:2px dashed var(--accent);
   border-radius:12px;
   padding:16px 10px;
@@ -319,7 +324,7 @@ a:hover{ color:var(--accent-dark); text-decoration:underline }
   min-height:64px;
   transition:border-color .2s, box-shadow .2s, transform .1s;
 }
-.method button:hover{ border-color:var(--accent); border-style:solid; box-shadow:0 4px 14px rgba(36,27,19,.12) }
+.method button:hover{ border-color:var(--accent); border-style:solid; box-shadow:0 4px 14px rgba(17,28,23,.10) }
 .method button:active{ transform:scale(.98) }
 .method button img{ height:38px; max-width:85%; object-fit:contain; pointer-events:none }
 
