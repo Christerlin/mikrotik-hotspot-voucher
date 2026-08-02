@@ -47,24 +47,27 @@
 # On AJOUTE "trial" aux methodes de connexion existantes sans toucher aux
 # autres (cookie et mac-cookie assurent la reconnexion sans retaper le code).
 #
-# EN DEUX TEMPS, obligatoirement : trial-uptime et trial-user-profile ne sont
-# acceptes que si "trial" figure DEJA dans login-by. Dans un seul "set",
-# RouterOS valide les parametres avant d'appliquer login-by et refuse
-# ("bad parameter trial-uptime").
+# RouterOS 7 utilise DEUX proprietes distinctes -- trial-uptime-limit et
+# trial-uptime-reset -- et non le "trial-uptime=30m/1d" combine que decrit
+# l'ancien wiki. Verifie sur un L009 v7 (/ip hotspot profile print detail).
+#
+# En deux temps : les parametres d'essai ne sont acceptes que si "trial"
+# figure deja dans login-by, or un seul "set" valide tout avant d'appliquer.
 /ip hotspot profile
 set [find name=hsprof1] login-by=cookie,http-chap,http-pap,mac-cookie,trial
-set [find name=hsprof1] trial-uptime=5m/1d trial-user-profile=essai
+set [find name=hsprof1] trial-uptime-limit=5m trial-uptime-reset=1d trial-user-profile=essai
 
 # --- Verification ------------------------------------------------------
-# /ip hotspot profile print detail        -> doit lister "trial"
+# /ip hotspot profile print detail
+#     -> login-by doit contenir "trial", trial-uptime-limit=5m,
+#        trial-uptime-reset=1d, trial-user-profile=essai
 # /ip hotspot user print where profile=essai
 #     -> les comptes T-<mac> apparaissent au fur et a mesure des essais
 # /ip hotspot active print where user~"^T-"
 #     -> qui est en essai en ce moment
 #
 # Pour arreter l'essai (retirer "trial" de la liste) :
-#   /ip hotspot profile set [find name=hsprof1] \
-#       login-by=cookie,http-chap,http-pap,mac-cookie
+#   /ip hotspot profile set [find name=hsprof1] login-by=cookie,http-chap,http-pap,mac-cookie
 #
 # Pour rendre un essai a un appareil avant la fin de la journee :
 #   /ip hotspot user remove [find name="T-AA:BB:CC:DD:EE:FF"]
