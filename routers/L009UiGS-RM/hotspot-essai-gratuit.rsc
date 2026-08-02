@@ -17,8 +17,11 @@
 # Meme debit que les forfaits d'entree de gamme : un essai bride ne vend
 # rien, il prouve juste que le reseau est lent. C'est la DUREE qui limite,
 # pas la vitesse.
+# idle-timeout / keepalive-timeout : sans eux, une session dont l'appareil
+# s'eteint ne se fermerait jamais et mangerait les 5 minutes offertes.
 /ip hotspot user profile
 add name=essai shared-users=1 rate-limit="1M/2M" \
+    idle-timeout=5m keepalive-timeout=2m \
     comment="Essai gratuit - genere automatiquement (utilisateurs T-<mac>)"
 
 # --- Activation de l'essai sur le serveur hotspot ----------------------
