@@ -46,8 +46,14 @@
 # Les codes vendus, eux, ne dependent pas de la MAC : ils restent surs.
 # On AJOUTE "trial" aux methodes de connexion existantes sans toucher aux
 # autres (cookie et mac-cookie assurent la reconnexion sans retaper le code).
+#
+# EN DEUX TEMPS, obligatoirement : trial-uptime et trial-user-profile ne sont
+# acceptes que si "trial" figure DEJA dans login-by. Dans un seul "set",
+# RouterOS valide les parametres avant d'appliquer login-by et refuse
+# ("bad parameter trial-uptime").
 /ip hotspot profile
-set [find name=hsprof1] login-by=cookie,http-chap,http-pap,mac-cookie,trial trial-uptime=5m/1d trial-user-profile=essai
+set [find name=hsprof1] login-by=cookie,http-chap,http-pap,mac-cookie,trial
+set [find name=hsprof1] trial-uptime=5m/1d trial-user-profile=essai
 
 # --- Verification ------------------------------------------------------
 # /ip hotspot profile print detail        -> doit lister "trial"
