@@ -8,14 +8,19 @@
   <link rel="icon" href="/favicon.ico">
   <title>Erreur - Hotspot</title>
   <link rel="stylesheet" href="css/theme.css">
+  <script src="js/erreurs.js"></script>
 </head>
 <body class="page mood-error">
   <div class="ticket" style="text-align:center">
+    <img class="logo sm" src="img/logo.png" width="400" height="342" alt="LambdaWifi">
     <div class="stamp" style="margin:0 auto 14px">REJETÉ</div>
     <div class="h1">Erreur de connexion</div>
-    <p class="sub">$(error)</p>
+    <p class="sub" id="errBox">Connexion impossible. Réessayez.</p>
+    <span id="errRaw" hidden>$(error)</span>
     <div class="perforation"></div>
-    <a class="buy" href="$(link-login)" style="display:inline-flex">Retour à la connexion</a>
+    <a class="buy" href="$(link-login)">Retour à la connexion</a>
+    <a class="buy secondary" href="prix.html" id="errBuy" style="display:none;margin-top:12px">Acheter un code</a>
+    <script>window.appliquerErreur();</script>
     <footer class="credit">© Codemi</footer>
   </div>
 </body>

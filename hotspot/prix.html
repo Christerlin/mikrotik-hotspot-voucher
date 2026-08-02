@@ -18,9 +18,10 @@
 
     <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:24px">
       <div>
-        <div class="eyebrow">LambdaWifi &middot; Billetterie</div>
+        <img class="logo xs" src="img/logo.png" width="400" height="342" alt="LambdaWifi">
+        <div class="eyebrow">Billetterie</div>
         <div class="h1">Choisissez votre pass</div>
-        <div class="sub" style="margin-bottom:0">Un forfait pour chaque besoin — payez en ligne, recevez votre code aussitôt.</div>
+        <div class="sub" style="margin-bottom:0">Un forfait pour chaque besoin. Payez en ligne, recevez votre code aussitôt.</div>
       </div>
       <button class="buy secondary" id="retrieveBtn">Déjà payé ?</button>
     </div>
@@ -159,7 +160,7 @@
         openOverlay(methodOverlay);
       });
 
-      // Forfaits : seul le gestionnaire fait foi. Rien n'est écrit en dur ici —
+      // Forfaits : seul le gestionnaire fait foi. Rien n'est écrit en dur ici,
       // un tarif retiré du dashboard doit disparaître du portail, et si le
       // gestionnaire est injoignable le client ne peut de toute façon pas payer :
       // mieux vaut le dire que d'afficher des forfaits inachetables.
@@ -480,7 +481,7 @@
 
       // Retour de paiement : le backend (/return) nous remet un jeton de
       // passation à durée de vie courte. On récupère le voucher tout seul, même
-      // si le navigateur a perdu sa session — le client n'a rien à saisir.
+      // si le navigateur a perdu sa session : le client n'a rien à saisir.
       var handoff = query.get("t");
       if (handoff) {
         // On nettoie l'URL pour ne pas laisser le jeton dans l'historique.

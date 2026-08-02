@@ -11,6 +11,7 @@
   <!-- Fichier local au routeur : la page de connexion ne dépend d'aucun
        serveur externe (elle doit s'afficher même si le manager dort). -->
   <script src="config.js"></script>
+  <script src="js/erreurs.js"></script>
 </head>
 <body class="page">
 
@@ -35,7 +36,7 @@ function doLogin() {
 $(endif)
 
 <div class="ticket" style="text-align:center">
-  <div class="h1">LAMBDA WIFI</div>
+  <img class="logo" src="img/logo.png" width="400" height="342" alt="LambdaWifi">
   <p class="sub">Entrez votre code d'accès pour vous connecter au réseau.</p>
 
   <form name="login" action="$(link-login-only)" method="post"
@@ -51,7 +52,14 @@ $(endif)
 
     <button class="buy" type="submit" id="submitBtn">Se connecter</button>
 
-    $(if error)<div class="err">$(error)</div>$(endif)
+    <!-- Le message brut du hotspot est en anglais et technique ("invalid
+         username or password"). On affiche un texte utile par defaut, et on
+         garde l'original cache pour que le script le precise. -->
+    $(if error)
+      <div class="err" id="errBox">Code incorrect. Vérifiez et réessayez.</div>
+      <a class="buy secondary" href="prix.html" id="errBuy" style="display:none;margin-top:12px">Acheter un code</a>
+      <span id="errRaw" hidden>$(error)</span>
+    $(endif)
 
     <div class="perforation"></div>
 
@@ -95,6 +103,9 @@ $(endif)
     if (note && window.TRIAL_LABEL) {
       note.textContent = window.TRIAL_LABEL + ' gratuites pour tester le réseau.';
     }
+
+    // Traduire l'erreur du hotspot (voir js/erreurs.js).
+    window.appliquerErreur();
 
     if (input) {
       input.addEventListener('input', function () {

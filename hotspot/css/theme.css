@@ -136,6 +136,19 @@ a:hover{ color:var(--accent-dark); text-decoration:underline }
 
 .stub{ padding-top:4px }
 
+/* Logo. L'image porte deja le nom "LambdaWifi" : on ne le repete pas en
+   texte a cote. Fond transparent, marges rognees : la largeur commande, la
+   hauteur suit, sinon le logo se deforme. */
+.logo{
+  display:block;
+  width:190px;
+  max-width:72%;
+  height:auto;
+  margin:0 auto 16px;
+}
+.logo.sm{ width:140px; margin-bottom:12px }
+.logo.xs{ width:104px; margin:0 0 10px }
+
 /* Tampon circulaire — pour l'état ("CONNECTÉ", prix, etc.) */
 .stamp{
   display:inline-flex;

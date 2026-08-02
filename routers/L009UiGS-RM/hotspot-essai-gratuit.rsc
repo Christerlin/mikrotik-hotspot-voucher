@@ -14,9 +14,13 @@
 # =====================================================================
 
 # --- Profil applique aux utilisateurs d'essai --------------------------
-# Meme debit que les forfaits d'entree de gamme : un essai bride ne vend
-# rien, il prouve juste que le reseau est lent. C'est la DUREE qui limite,
-# pas la vitesse.
+# rate-limit="" = aucune limite de debit. Un essai bride ne vend rien : il
+# prouve juste que le reseau est lent. C'est la DUREE qui limite, pas la
+# vitesse -- 5 minutes a pleine vitesse font une meilleure demonstration
+# qu'une heure au ralenti.
+# A surveiller : si plusieurs essais tournent en meme temps sur une liaison
+# Starlink, ils peuvent gener les clients payants. Si cela arrive, mettre
+# par exemple rate-limit="2M/4M" plutot que de raccourcir l'essai.
 # idle-timeout / keepalive-timeout : sans eux, une session dont l'appareil
 # s'eteint ne se fermerait jamais et mangerait les 5 minutes offertes.
 # Cree ou met a jour : ce fichier peut etre reimporte sans erreur (un "add"
@@ -27,9 +31,9 @@
 # user profile n'accepte pas ce parametre ("bad parameter comment").
 # Le nom "essai" suffit a l'identifier.
 :if ([:len [/ip hotspot user profile find name=essai]] = 0) do={
-  /ip hotspot user profile add name=essai shared-users=1 rate-limit="1M/2M" idle-timeout=5m keepalive-timeout=2m
+  /ip hotspot user profile add name=essai shared-users=1 rate-limit="" idle-timeout=5m keepalive-timeout=2m
 } else={
-  /ip hotspot user profile set [find name=essai] shared-users=1 rate-limit="1M/2M" idle-timeout=5m keepalive-timeout=2m
+  /ip hotspot user profile set [find name=essai] shared-users=1 rate-limit="" idle-timeout=5m keepalive-timeout=2m
 }
 
 # --- Activation de l'essai sur le serveur hotspot ----------------------
