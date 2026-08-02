@@ -23,11 +23,11 @@
 # sur un nom deja pris arreterait l'import, et le profil ne peut pas etre
 # supprime tant que des comptes T-<mac> l'utilisent).
 #
-# NE PAS couper ces lignes avec "\" : a l'interieur d'un bloc do={...}, la
-# continuation de ligne n'est pas honoree et RouterOS lit le reste comme une
-# commande separee ("bad parameter comment"). Lignes longues = lignes sures.
+# Pas de "comment=" ici : contrairement a la plupart des menus, /ip hotspot
+# user profile n'accepte pas ce parametre ("bad parameter comment").
+# Le nom "essai" suffit a l'identifier.
 :if ([:len [/ip hotspot user profile find name=essai]] = 0) do={
-  /ip hotspot user profile add name=essai shared-users=1 rate-limit="1M/2M" idle-timeout=5m keepalive-timeout=2m comment="Essai gratuit - comptes T-<mac> generes automatiquement"
+  /ip hotspot user profile add name=essai shared-users=1 rate-limit="1M/2M" idle-timeout=5m keepalive-timeout=2m
 } else={
   /ip hotspot user profile set [find name=essai] shared-users=1 rate-limit="1M/2M" idle-timeout=5m keepalive-timeout=2m
 }
