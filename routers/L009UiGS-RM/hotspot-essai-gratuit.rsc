@@ -5,7 +5,7 @@
 #   /import hotspot-essai-gratuit.rsc
 #
 # Ce que ca fait : un appareil qui n'a jamais paye peut se connecter
-# 20 minutes par jour, sans code. Le lien apparait tout seul sur la page
+# 5 minutes par jour, sans code. Le lien apparait tout seul sur la page
 # de connexion ($(if trial == 'yes')) et disparait quand le quota est
 # epuise. But : laisser le client constater que le reseau marche avant
 # de lui demander de l'argent.
@@ -23,13 +23,22 @@ add name=essai shared-users=1 rate-limit="1M/2M" \
 
 # --- Activation de l'essai sur le serveur hotspot ----------------------
 # trial-uptime = duree offerte / periode avant remise a zero.
-#   20m/1d  -> 20 minutes par jour et par appareil
+#   5m/1d  -> 5 minutes par jour et par appareil
+#
+# ATTENTION - l'essai est compte par adresse MAC, et les telephones
+# modernes changent la leur : iOS 18+ choisit "Rotating" par defaut sur
+# les reseaux ouverts (nouvelle MAC toutes les 2 semaines), et n'importe
+# qui peut basculer "Adresse Wi-Fi privee" pour en obtenir une neuve tout
+# de suite. L'essai n'est donc PAS infalsifiable : c'est une depense de
+# publicite, pas un controle d'acces. D'ou 5 minutes -- assez pour montrer
+# que le reseau marche, trop peu pour valoir la peine d'etre contourne.
+# Les codes vendus, eux, ne dependent pas de la MAC : ils restent surs.
 # On AJOUTE "trial" aux methodes de connexion existantes sans toucher aux
 # autres (cookie et mac-cookie assurent la reconnexion sans retaper le code).
 /ip hotspot profile
 set [find name=hsprof1] \
     login-by=cookie,http-chap,http-pap,mac-cookie,trial \
-    trial-uptime=20m/1d \
+    trial-uptime=5m/1d \
     trial-user-profile=essai
 
 # --- Verification ------------------------------------------------------
