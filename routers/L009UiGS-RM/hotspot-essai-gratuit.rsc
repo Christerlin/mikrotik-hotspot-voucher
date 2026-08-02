@@ -22,13 +22,14 @@
 # Cree ou met a jour : ce fichier peut etre reimporte sans erreur (un "add"
 # sur un nom deja pris arreterait l'import, et le profil ne peut pas etre
 # supprime tant que des comptes T-<mac> l'utilisent).
+#
+# NE PAS couper ces lignes avec "\" : a l'interieur d'un bloc do={...}, la
+# continuation de ligne n'est pas honoree et RouterOS lit le reste comme une
+# commande separee ("bad parameter comment"). Lignes longues = lignes sures.
 :if ([:len [/ip hotspot user profile find name=essai]] = 0) do={
-  /ip hotspot user profile add name=essai shared-users=1 rate-limit="1M/2M" \
-    idle-timeout=5m keepalive-timeout=2m \
-    comment="Essai gratuit - genere automatiquement (utilisateurs T-<mac>)"
+  /ip hotspot user profile add name=essai shared-users=1 rate-limit="1M/2M" idle-timeout=5m keepalive-timeout=2m comment="Essai gratuit - comptes T-<mac> generes automatiquement"
 } else={
-  /ip hotspot user profile set [find name=essai] shared-users=1 rate-limit="1M/2M" \
-    idle-timeout=5m keepalive-timeout=2m
+  /ip hotspot user profile set [find name=essai] shared-users=1 rate-limit="1M/2M" idle-timeout=5m keepalive-timeout=2m
 }
 
 # --- Activation de l'essai sur le serveur hotspot ----------------------
@@ -46,10 +47,7 @@
 # On AJOUTE "trial" aux methodes de connexion existantes sans toucher aux
 # autres (cookie et mac-cookie assurent la reconnexion sans retaper le code).
 /ip hotspot profile
-set [find name=hsprof1] \
-    login-by=cookie,http-chap,http-pap,mac-cookie,trial \
-    trial-uptime=5m/1d \
-    trial-user-profile=essai
+set [find name=hsprof1] login-by=cookie,http-chap,http-pap,mac-cookie,trial trial-uptime=5m/1d trial-user-profile=essai
 
 # --- Verification ------------------------------------------------------
 # /ip hotspot profile print detail        -> doit lister "trial"
