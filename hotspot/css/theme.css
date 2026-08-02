@@ -141,13 +141,13 @@ a:hover{ color:var(--accent-dark); text-decoration:underline }
    hauteur suit, sinon le logo se deforme. */
 .logo{
   display:block;
-  width:190px;
-  max-width:72%;
+  width:165px;
+  max-width:60%;
   height:auto;
   margin:0 auto 16px;
 }
-.logo.sm{ width:140px; margin-bottom:12px }
-.logo.xs{ width:104px; margin:0 0 10px }
+.logo.sm{ width:125px; margin-bottom:12px }
+.logo.xs{ width:96px; margin:0 0 10px }
 
 /* Tampon circulaire — pour l'état ("CONNECTÉ", prix, etc.) */
 .stamp{
