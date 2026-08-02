@@ -187,6 +187,10 @@ a:hover{ color:var(--accent-dark); text-decoration:underline }
   box-shadow:0 0 0 3px rgba(22,163,74,.18);
 }
 
+/* De l'air entre le champ et le bouton : colles l'un a l'autre, on tape
+   dans "Se connecter" en visant le champ. */
+.voucher-input{ margin-bottom:14px }
+
 .voucher-input input{
   width:100%;
   padding:16px 12px;
@@ -216,7 +220,7 @@ a:hover{ color:var(--accent-dark); text-decoration:underline }
   align-items:center;
   justify-content:center;
   width:100%;
-  padding:15px 20px;
+  padding:13px 20px;
   margin-top:4px;
   border:none;
   border-radius:999px;
@@ -288,10 +292,14 @@ a:hover{ color:var(--accent-dark); text-decoration:underline }
   color:var(--accent-dark);
   border:2px solid var(--accent);
   box-shadow:none;
-  padding:12px 20px;
+  padding:11px 20px;   /* 11 + 2 de bordure = les 13 de .buy */
 }
 .buy.secondary:hover{ background:var(--accent); color:var(--accent-ink) }
 .buy.secondary:active{ transform:translateY(1px); box-shadow:none }
+
+/* Deux actions qui se suivent ne doivent pas se toucher : on ne clique pas
+   "Se déconnecter" en voulant acheter. */
+.buy + form{ margin-top:10px }
 
 /* Bandeau d'information (essai en cours, crédit bientôt épuisé…). */
 .notice{
