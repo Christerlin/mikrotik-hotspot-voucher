@@ -19,3 +19,9 @@ window.WHATSAPP_NUMBER = "509XXXXXXXX";
 // https://github.com/Christerlin/mikrovoucher-manager). Identifie ce routeur
 // auprès du manager multi-routeurs. Ignoré par le backend simple.
 window.ROUTER_SLUG = "";
+
+// Duree de l'essai gratuit, telle qu'elle est annoncee au client sur la page
+// de connexion (ex : "20 minutes"). Doit correspondre a trial-uptime dans
+// hotspot-essai-gratuit.rsc. Laissez vide si vous n'offrez pas d'essai :
+// le lien n'apparait de toute facon que si le routeur l'autorise.
+window.TRIAL_LABEL = "";

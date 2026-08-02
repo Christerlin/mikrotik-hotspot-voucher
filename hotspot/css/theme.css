@@ -27,6 +27,7 @@
   --mood-dark: var(--accent-dark);
 
   --danger: #e11d48;
+  --warn:   #d97706;
 
   --overlay-bg: rgba(17,28,23,.55);
 
@@ -279,6 +280,37 @@ a:hover{ color:var(--accent-dark); text-decoration:underline }
 }
 
 .err{ color:var(--danger); font-weight:700; font-size:14px; margin-top:8px }
+
+/* Bouton secondaire : l'essai gratuit ne doit pas concurrencer l'achat.
+   Même forme que .buy, mais en contour — la hiérarchie reste lisible. */
+.buy.secondary{
+  background:transparent;
+  color:var(--accent-dark);
+  border:2px solid var(--accent);
+  box-shadow:none;
+  padding:12px 20px;
+}
+.buy.secondary:hover{ background:var(--accent); color:var(--accent-ink) }
+.buy.secondary:active{ transform:translateY(1px); box-shadow:none }
+
+/* Bandeau d'information (essai en cours, crédit bientôt épuisé…). */
+.notice{
+  display:block;
+  margin:12px 0;
+  padding:10px 12px;
+  border:1px solid var(--line);
+  border-left:5px solid var(--accent);
+  border-radius:12px;
+  background:var(--stub);
+  color:var(--ink);
+  font-size:13px;
+  line-height:1.45;
+  text-align:left;
+  text-decoration:none;
+}
+.notice strong{ display:block; font-size:14px; margin-bottom:2px }
+.notice.warn{ border-left-color:var(--warn) }
+a.notice:hover{ border-color:var(--accent) }
 
 /* --------------------------------------------------------------------
    Fenêtres modales (prix.html)

@@ -52,9 +52,30 @@ function openLogout(){if(window.name!='hotspot_status') return true; open('$(lin
     $(endif)
   </div>
 
+  <!-- L'essai n'a de valeur que s'il mène à l'achat : on le dit tout de suite,
+       pendant que le client constate que le réseau marche. -->
+  $(if login-by == 'trial')
+    <a class="notice warn" href="prix.html" id="trialNotice">
+      <strong>Vous êtes en essai gratuit</strong>
+      Achetez un code pour rester connecté quand l'essai se termine.
+    </a>
+  $(endif)
+
+  <!-- Rempli par le compte à rebours quand il reste peu de temps. -->
+  <a class="notice warn" href="prix.html" id="lowCredit" style="display:none">
+    <strong id="lowCreditTitle">Votre temps est bientôt écoulé</strong>
+    Rechargez maintenant pour ne pas être coupé.
+  </a>
+
+  <!-- L'explication vient avant l'action : le bandeau, puis le bouton. -->
+  $(if login-by == 'trial')
+    <a class="buy" href="prix.html">Acheter un code</a>
+  $(endif)
+
   $(if login-by-mac != 'yes')
     <form action="$(link-logout)" name="logout" onSubmit="return openLogout()">
-      <button class="buy" type="submit">Se déconnecter</button>
+      <!-- Secondaire : se déconnecter n'est pas ce qu'on encourage. -->
+      <button class="buy secondary" type="submit">Se déconnecter</button>
     </form>
   $(endif)
 
@@ -89,12 +110,31 @@ function openLogout(){if(window.name!='hotspot_status') return true; open('$(lin
       function p(n) { return (n < 10 ? '0' : '') + n; }
       return (d > 0 ? d + 'j ' : '') + p(h) + ':' + p(mn) + ':' + p(s);
     }
+    // Avètisman lè kredi a prèt pou fini : pi bon moman pou vann yon lòt kòd
+    // se pandan moun nan konekte, pa apre koneksyon an koupe.
+    var SEUIL = 600;                       // 10 minit
+    var low = document.getElementById('lowCredit');
+    var lowTitle = document.getElementById('lowCreditTitle');
+    var trialNotice = document.getElementById('trialNotice');
+    function avertir(sec) {
+      if (!low || sec > SEUIL || sec <= 0) return;
+      low.style.display = 'block';
+      // Arrondi au plus proche, jamais 0 : le bandeau est juste à côté du
+      // chrono, "9 min" en face de 08:26 se lit comme une erreur.
+      lowTitle.textContent = 'Il vous reste ' + Math.max(1, Math.round(sec / 60)) + ' min';
+      // Un seul appel à l'action à la fois : l'alerte remplace le rappel
+      // d'essai, sinon deux bandeaux identiques se superposent.
+      if (trialNotice) { trialNotice.style.display = 'none'; trialNotice = null; }
+    }
+
     var remaining = toSeconds(el.textContent);
     if (remaining <= 0) return; // fòma pa rekonèt : kite valè sèvè a
+    avertir(remaining);
     setInterval(function () {
       remaining -= 1;
       if (remaining <= 0) { remaining = 0; el.textContent = '00:00:00'; return; }
       el.textContent = format(remaining);
+      avertir(remaining);
     }, 1000);
   })();
 </script>
