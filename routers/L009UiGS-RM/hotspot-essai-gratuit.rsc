@@ -1,7 +1,7 @@
 # =====================================================================
 # Essai gratuit — L009UiGS-RM
 #
-# A importer UNE FOIS, apres le script reseau principal :
+# A importer apres le script reseau principal (reimportable sans risque) :
 #   /import hotspot-essai-gratuit.rsc
 #
 # Ce que ca fait : un appareil qui n'a jamais paye peut se connecter
@@ -19,10 +19,17 @@
 # pas la vitesse.
 # idle-timeout / keepalive-timeout : sans eux, une session dont l'appareil
 # s'eteint ne se fermerait jamais et mangerait les 5 minutes offertes.
-/ip hotspot user profile
-add name=essai shared-users=1 rate-limit="1M/2M" \
+# Cree ou met a jour : ce fichier peut etre reimporte sans erreur (un "add"
+# sur un nom deja pris arreterait l'import, et le profil ne peut pas etre
+# supprime tant que des comptes T-<mac> l'utilisent).
+:if ([:len [/ip hotspot user profile find name=essai]] = 0) do={
+  /ip hotspot user profile add name=essai shared-users=1 rate-limit="1M/2M" \
     idle-timeout=5m keepalive-timeout=2m \
     comment="Essai gratuit - genere automatiquement (utilisateurs T-<mac>)"
+} else={
+  /ip hotspot user profile set [find name=essai] shared-users=1 rate-limit="1M/2M" \
+    idle-timeout=5m keepalive-timeout=2m
+}
 
 # --- Activation de l'essai sur le serveur hotspot ----------------------
 # trial-uptime = duree offerte / periode avant remise a zero.
