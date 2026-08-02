@@ -219,8 +219,12 @@ a:hover{ color:var(--accent-dark); text-decoration:underline }
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  width:100%;
-  padding:13px 20px;
+  /* Le bouton epouse son texte : une pastille pleine largeur donne un pave
+     vert qui ecrase le reste du billet. max-width evite qu'un libelle long
+     deborde de la carte. */
+  width:auto;
+  max-width:100%;
+  padding:13px 30px;
   margin-top:4px;
   border:none;
   border-radius:999px;
@@ -292,7 +296,7 @@ a:hover{ color:var(--accent-dark); text-decoration:underline }
   color:var(--accent-dark);
   border:2px solid var(--accent);
   box-shadow:none;
-  padding:11px 20px;   /* 11 + 2 de bordure = les 13 de .buy */
+  padding:11px 28px;   /* 11 + 2 de bordure = les 13 de .buy */
 }
 .buy.secondary:hover{ background:var(--accent); color:var(--accent-ink) }
 .buy.secondary:active{ transform:translateY(1px); box-shadow:none }
