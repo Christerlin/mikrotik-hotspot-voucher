@@ -147,8 +147,8 @@ a:hover{ color:var(--accent-dark); text-decoration:underline }
    hauteur suit, sinon le logo se deforme. */
 .logo{
   display:block;
-  width:135px;
-  max-width:52%;
+  width:110px;
+  max-width:44%;
   height:auto;
   margin:0 auto 16px;
 }
