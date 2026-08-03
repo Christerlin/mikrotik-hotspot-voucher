@@ -48,22 +48,39 @@ window.afficherSponsors = function (ou, cible) {
       }
 
       if (s.contact) {
-        var lien = document.createElement("a");
-        lien.className = "sponsor-contact";
-        // Un numero devient un lien WhatsApp ; le reste est pris tel quel.
+        // Un numero devient un lien WhatsApp. Pour le reste, le schema est
+        // verifie contre une liste fermee : pose tel quel, un "javascript:"
+        // saisi dans le champ contact deviendrait un lien executable sur la
+        // page du portail, pour tous les clients.
         var numero = String(s.contact).replace(/[^0-9]/g, "");
-        lien.href = /^[0-9+ .-]+$/.test(s.contact) && numero.length >= 8
-          ? "https://wa.me/" + numero
-          : s.contact;
-        lien.target = "_blank";
-        lien.rel = "noopener";
+        var cible = null;
+        if (/^[0-9+ .-]+$/.test(s.contact) && numero.length >= 8) {
+          cible = "https://wa.me/" + numero;
+        } else {
+          try {
+            var u = new URL(s.contact);
+            if (["https:", "http:", "mailto:", "tel:"].indexOf(u.protocol) >= 0) cible = u.href;
+          } catch (e) { /* pas une URL : on affichera le texte sans lien */ }
+        }
+
+        var lien = document.createElement(cible ? "a" : "div");
+        lien.className = "sponsor-contact";
+        if (cible) {
+          lien.href = cible;
+          lien.target = "_blank";
+          lien.rel = "noopener";
+        }
         lien.textContent = s.contact;
-        lien.addEventListener("click", function () {
-          // Compteur en partance : la navigation ne doit pas l'attendre.
-          var u = base + "/api/portal/" + encodeURIComponent(slug) + "/sponsors/" + s.id + "/clic";
-          if (navigator.sendBeacon) navigator.sendBeacon(u);
-          else fetch(u, { keepalive: true }).catch(function () {});
-        });
+        // Compteur seulement s'il y a vraiment un lien : compter un clic sur
+        // du texte inerte gonflerait le chiffre qu'on vend au sponsor.
+        if (cible) {
+          lien.addEventListener("click", function () {
+            // Compteur en partance : la navigation ne doit pas l'attendre.
+            var url = base + "/api/portal/" + encodeURIComponent(slug) + "/sponsors/" + s.id + "/clic";
+            if (navigator.sendBeacon) navigator.sendBeacon(url);
+            else fetch(url, { keepalive: true }).catch(function () {});
+          });
+        }
         bloc.appendChild(lien);
       }
 
