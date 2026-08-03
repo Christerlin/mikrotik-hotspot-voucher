@@ -324,6 +324,24 @@ a:hover{ color:var(--accent-dark); text-decoration:underline }
    "Se déconnecter" en voulant acheter. */
 .buy + form{ margin-top:10px }
 
+/* Encart sponsor. Discret par construction : il se vend parce qu'il est vu
+   par tout le quartier, pas parce qu'il crie plus fort que le formulaire. */
+.sponsor{
+  margin-top:14px;
+  padding:12px;
+  border:1px dashed var(--line);
+  border-radius:12px;
+  text-align:center;
+}
+.sponsor-tag{
+  font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink-soft);margin-bottom:6px;
+}
+.sponsor-logo{ max-width:130px; max-height:52px; margin:0 auto 6px; display:block }
+.sponsor-nom{ font-weight:700; font-size:14px }
+.sponsor-accroche{ font-size:12px; color:var(--ink-soft); margin-top:2px; line-height:1.4 }
+.sponsor-contact{ display:inline-block; margin-top:6px; font-size:13px }
+
 /* Bandeau d'information (essai en cours, crédit bientôt épuisé…). */
 .notice{
   display:block;

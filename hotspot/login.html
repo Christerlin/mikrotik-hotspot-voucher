@@ -12,6 +12,7 @@
        serveur externe (elle doit s'afficher même si le manager dort). -->
   <script src="config.js"></script>
   <script src="js/erreurs.js"></script>
+  <script src="js/sponsors.js"></script>
 </head>
 <body class="page">
 
@@ -73,6 +74,7 @@ $(endif)
          id="trialBtn">Essayer gratuitement</a>
       <div style="font-size:12px;color:var(--ink-soft);margin-top:8px"
            id="trialNote">Testez le réseau avant d'acheter.</div>
+      <div id="sponsorTrial"></div>
     </div>
     $(endif)
 
@@ -88,6 +90,8 @@ $(endif)
     </div>
   </form>
 
+    <div id="sponsorLogin"></div>
+
   <footer class="credit">© Codemi</footer>
 </div>
 
@@ -97,15 +101,39 @@ $(endif)
     var form = document.forms['login'];
     var btn = document.getElementById('submitBtn');
 
-    // Annoncer la durée de l'essai (TRIAL_LABEL dans config.js) : "gratuit"
-    // sans durée laisse croire à un accès illimité.
+    // Annoncer la durée de l'essai : "gratuit" sans durée laisse croire à un
+    // accès illimité. La valeur de référence est celle du gestionnaire, qui
+    // pilote aussi le routeur ; TRIAL_LABEL sert de repli hors ligne.
     var note = document.getElementById('trialNote');
-    if (note && window.TRIAL_LABEL) {
-      note.textContent = window.TRIAL_LABEL + ' gratuites pour tester le réseau.';
+    function direDuree(txt) {
+      if (note && txt) note.textContent = txt + ' gratuites pour tester le réseau.';
+    }
+    direDuree(window.TRIAL_LABEL);
+    if (note) {
+      var bk = (window.BACKEND_URL || '').replace(/\/$/, '');
+      var sl = window.ROUTER_SLUG || '';
+      if (bk && sl) {
+        fetch(bk + '/api/portal/' + encodeURIComponent(sl) + '/trial')
+          .then(function (r) { return r.ok ? r.json() : null; })
+          .then(function (d) {
+            if (!d || !d.limite) return;
+            var m = /^([0-9]+)([smhdw])$/.exec(d.limite);
+            if (!m) return;
+            var mots = { s: 'secondes', m: 'minutes', h: 'heures', d: 'jours', w: 'semaines' };
+            direDuree(m[1] + ' ' + mots[m[2]]);
+          })
+          .catch(function () { /* hors ligne : on garde TRIAL_LABEL */ });
+      }
     }
 
     // Traduire l'erreur du hotspot (voir js/erreurs.js).
     window.appliquerErreur();
+
+    // Sponsors (voir js/sponsors.js). Absents ou injoignables : rien ne change.
+    window.afficherSponsors('login', 'sponsorLogin');
+    if (document.getElementById('sponsorTrial')) {
+      window.afficherSponsors('trial', 'sponsorTrial');
+    }
 
     if (input) {
       input.addEventListener('input', function () {
