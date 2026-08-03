@@ -6,6 +6,9 @@
   <link rel="icon" href="/favicon.ico">
   <title>Déconnexion</title>
   <link rel="stylesheet" href="css/theme.css">
+  <!-- Le numero vit dans config.js, qui n'est pas versionne : le depot est
+       public, il ne doit pas porter le vrai numero. -->
+  <script src="config.js"></script>
 </head>
 <body class="page mood-neutral">
   <div class="ticket" style="text-align:center">
@@ -30,11 +33,27 @@
     <form action="$(link-login)" name="login" onSubmit="return openLogin()">
       <button class="buy" type="submit">Se reconnecter</button>
     </form>
-    <p class="sub" style="margin-top:14px">Un problème ? Contactez-nous au +509 XX XX XX XX.</p>
+    <p class="sub" style="margin-top:14px" id="contactLine" hidden>Un problème ?
+      Contactez-nous au <a id="contactNum" href="#"></a>.</p>
     <footer class="credit">© Codemi</footer>
   </div>
 
   <script>
+    // Numero de contact : affiche seulement s'il est renseigne. Mieux vaut
+    // ne rien dire que d'afficher "+509 XX XX XX XX" a un client bloque.
+    (function () {
+      var brut = String(window.WHATSAPP_NUMBER || '').replace(/[^0-9]/g, '');
+      if (brut.length < 8) return;
+      var local = brut.replace(/^509/, '');
+      var joli = local.length === 8
+        ? '+509 ' + local.slice(0, 2) + ' ' + local.slice(2, 4) + ' ' + local.slice(4)
+        : '+' + brut;
+      var a = document.getElementById('contactNum');
+      a.textContent = joli;
+      a.href = 'tel:+' + brut;          // marche meme sans connexion
+      document.getElementById('contactLine').hidden = false;
+    })();
+
     function openLogin() {
       if (window.name != 'hotspot_logout') return true;
       open('$(link-login)', '_blank', '');
