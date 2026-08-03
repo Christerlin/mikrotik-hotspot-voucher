@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" href="/favicon.ico">
 <link rel="stylesheet" href="css/theme.css">
+<script src="config.js"></script>
 $(if refresh-timeout)
 <meta http-equiv="refresh" content="$(refresh-timeout-secs)">
 $(endif)
@@ -43,6 +44,7 @@ function openLogout(){if(window.name!='hotspot_status') return true; open('$(lin
     $(if session-time-left)
       <div class="row"><span class="k">Connecté depuis</span><span class="v">$(uptime)</span></div>
       <div class="row highlight"><span class="k">Temps restant</span><span class="v" id="timeLeft">$(session-time-left)</span></div>
+      <div class="row" id="echeanceRow" style="display:none"><span class="k">Accès valable jusqu'à</span><span class="v" id="echeance">–</span></div>
     $(else)
       <div class="row"><span class="k">Connecté depuis</span><span class="v">$(uptime)</span></div>
     $(endif)
@@ -130,6 +132,32 @@ function openLogout(){if(window.name!='hotspot_status') return true; open('$(lin
 
     var remaining = toSeconds(el.textContent);
     if (remaining <= 0) return; // fòma pa rekonèt : kite valè sèvè a
+
+    // Le routeur ne decompte que le temps de CONNEXION : deconnectez-vous une
+    // journee, il affichera toujours le meme reste. L'acces, lui, expire a une
+    // date fixe apres la premiere connexion. On demande cette echeance au
+    // gestionnaire et on affiche la plus proche des deux, sinon le client
+    // croit disposer de bien plus de temps qu'il n'en a.
+    (function echeance() {
+      var base = (window.BACKEND_URL || '').replace(/\/$/, '');
+      var slug = window.ROUTER_SLUG || '';
+      var code = '$(username)';
+      if (!base || !slug || !code) return;
+      fetch(base + '/api/portal/' + encodeURIComponent(slug) + '/expiry/' + encodeURIComponent(code))
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (d) {
+          if (!d || typeof d.restant !== 'number') return;
+          var fin = new Date(Date.now() + d.restant * 1000);
+          document.getElementById('echeance').textContent =
+            fin.toLocaleString('fr-FR', { weekday: 'short', day: 'numeric',
+              month: 'short', hour: '2-digit', minute: '2-digit' });
+          document.getElementById('echeanceRow').style.display = '';
+          // La date fixe prime des qu'elle arrive avant la fin du temps de
+          // connexion : c'est elle qui coupera l'acces.
+          if (d.restant < remaining) { remaining = d.restant; el.textContent = format(remaining); avertir(remaining); }
+        })
+        .catch(function () { /* gestionnaire injoignable : on garde la valeur du routeur */ });
+    })();
     avertir(remaining);
     setInterval(function () {
       remaining -= 1;
