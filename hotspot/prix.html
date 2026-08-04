@@ -20,7 +20,7 @@
       <div>
         <div class="eyebrow">LambdaWifi &middot; Billetterie</div>
         <div class="h1">Choisissez votre pass</div>
-        <div class="sub" style="margin-bottom:0">Un forfait pour chaque besoin. Payez en ligne, recevez votre code aussitôt.</div>
+        <div class="sub" style="margin-bottom:0" id="sousTitre">Un forfait pour chaque besoin. Payez en ligne, recevez votre code aussitôt.</div>
       </div>
       <button class="buy secondary" id="retrieveBtn">Déjà payé ?</button>
     </div>
@@ -126,6 +126,21 @@
       // affiché tant que tout se passe bien : le client ne doit pas le confondre
       // avec son code d'accès. On ne le révèle qu'en cas de blocage.
       var recoveryPin = null;
+      // Recharge : le client prolonge le code qu'il utilise deja, il ne
+      // recevra donc pas de nouveau code. Le code vient de la page de statut.
+      var recharge = (function () {
+        var m = /[?&]recharge=([A-Za-z0-9_-]{1,32})/.exec(window.location.search);
+        return m ? m[1].toUpperCase() : null;
+      })();
+
+      if (recharge) {
+        var st = document.getElementById("sousTitre");
+        if (st) {
+          st.textContent = "Rechargez le code " + recharge +
+            " : votre accès est prolongé, sans coupure et sans nouveau code.";
+        }
+        document.title = "Recharger " + recharge;
+      }
 
       // Bloc "code de récupération", ajouté aux écrans d'échec uniquement.
       function recoveryBlock() {
@@ -333,7 +348,11 @@
           var res = await fetch(BACKEND + "/api/checkout", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ planId: plan.id, method: method, routerSlug: window.ROUTER_SLUG || "" }),
+            body: JSON.stringify({
+              planId: plan.id, method: method,
+              routerSlug: window.ROUTER_SLUG || "",
+              recharge: recharge || undefined,
+            }),
           });
           var data = await res.json();
           if (!res.ok || !data.redirectUrl) throw new Error(data.error || "Échec");
@@ -376,6 +395,17 @@
       function showDelivered(code) {
         clearInterval(pollTimer);
         localStorage.removeItem("pendingOrder");
+        // Recharge : le client garde son code et sa session. Le renvoyer sur
+        // la page de connexion le déconnecterait pour rien.
+        if (recharge) {
+          showStatus(
+            "<h3>Accès prolongé</h3>" +
+              '<p>Votre code <span class="mono">' + recharge + "</span> continue de fonctionner.</p>" +
+              '<p style="font-size:13px">Rien à ressaisir : vous restez connecté.</p>' +
+              '<button class="buy" onclick="window.location=\'status.html\'">Voir mon temps restant</button>'
+          );
+          return;
+        }
         showStatus(
           "<h3>Paiement confirmé</h3><p>Votre code d'accès :</p>" +
             '<div class="code">' + code + "</div>" +
