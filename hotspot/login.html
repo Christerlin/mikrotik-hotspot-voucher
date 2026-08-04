@@ -38,7 +38,15 @@ $(endif)
 
 <div class="ticket" style="text-align:center">
   <img class="logo" src="img/logo.png" width="110" height="94" alt="LambdaWifi">
-  <p class="sub">Entrez votre code d'accès pour vous connecter au réseau.</p>
+  <p class="sub" id="sousTitre">Entrez votre code d'accès pour vous connecter au réseau.</p>
+
+  <!-- Rempli par le script quand un client déjà venu revient : soit son code
+       marche encore et on le remplit, soit son accès a pris fin et on lui
+       propose de le reprendre. -->
+  <a class="notice warn" id="retour" style="display:none">
+    <strong id="retourTitre"></strong>
+    <span id="retourTexte"></span>
+  </a>
 
   <form name="login" action="$(link-login-only)" method="post"
         $(if chap-id) onSubmit="return doLogin()" $(endif)>
@@ -128,6 +136,63 @@ $(endif)
 
     // Traduire l'erreur du hotspot (voir js/erreurs.js).
     window.appliquerErreur();
+
+    // Client qui revient. Le code est-il encore valable ? Le gestionnaire
+    // seul le sait : le routeur, lui, a déjà oublié un code expiré.
+    (function clientQuiRevient() {
+      var params0 = new URLSearchParams(window.location.search);
+      if (params0.get('code')) return;          // retour de paiement : on ne touche à rien
+      var code;
+      try { code = localStorage.getItem('mvDernierCode'); } catch (e) { return; }
+      if (!code || !/^[A-Za-z0-9_-]{1,32}$/.test(code)) return;
+
+      var bloc = document.getElementById('retour');
+      var titre = document.getElementById('retourTitre');
+      var texte = document.getElementById('retourTexte');
+      var base = (window.BACKEND_URL || '').replace(/\/$/, '');
+      var slug = window.ROUTER_SLUG || '';
+
+      function fini() {
+        // Accès terminé mais code toujours connu : un seul geste, le reprendre.
+        titre.textContent = 'Votre accès a pris fin';
+        texte.textContent = 'Rechargez le code ' + code + ' et reprenez tout de suite.';
+        bloc.href = 'prix.html?recharge=' + encodeURIComponent(code);
+        bloc.style.display = 'block';
+      }
+      function oublie() {
+        // Code inconnu du gestionnaire (supprimé, autre réseau…). Proposer de
+        // le recharger enverrait le client droit dans une erreur.
+        try { localStorage.removeItem('mvDernierCode'); } catch (e) {}
+      }
+      function encoreBon(restantSec, demarre) {
+        // Code toujours valable : on le remplit, il n'a plus qu'à valider.
+        if (input) input.value = code;
+        var h = Math.floor(restantSec / 3600);
+        titre.textContent = 'Bon retour';
+        if (!demarre) {
+          // Rechargé à l'instant, ou jamais utilisé : le décompte n'a pas
+          // commencé, annoncer un « reste » serait faux.
+          texte.textContent = 'Votre code est prêt. Touchez « Se connecter ».';
+        } else {
+          texte.textContent = h >= 1
+            ? 'Votre code est prêt, il vous reste environ ' + h + ' h.'
+            : 'Votre code est prêt, il reste moins d\'une heure.';
+        }
+        bloc.removeAttribute('href');
+        bloc.style.display = 'block';
+      }
+
+      if (!base || !slug) { fini(); return; }
+      fetch(base + '/api/portal/' + encodeURIComponent(slug) + '/expiry/' + encodeURIComponent(code))
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (d) {
+          if (!d) { oublie(); return; }              // 404 : code inconnu
+          if (d.echu) { fini(); return; }
+          if (typeof d.restant === 'number' && d.restant > 0) encoreBon(d.restant, d.demarre);
+          else fini();
+        })
+        .catch(function () { /* gestionnaire injoignable : on ne dit rien plutôt que mentir */ });
+    })();
 
     // Sponsors (voir js/sponsors.js). Absents ou injoignables : rien ne change.
     window.afficherSponsors('login', 'sponsorLogin');

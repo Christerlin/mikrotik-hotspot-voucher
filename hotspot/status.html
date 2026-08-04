@@ -92,6 +92,14 @@ function openLogout(){if(window.name!='hotspot_status') return true; open('$(lin
 
 <script type="text/javascript">
   (function () {
+    // Retenir le code pour la prochaine visite de la page de connexion :
+    // c'est ce qui permet de reconnaitre un client coupe et de lui epargner
+    // la ressaisie. Jamais pour un essai : "T-<mac>" n'est pas un code vendu.
+    try {
+      var moi = '$(username)';
+      if (moi && moi.indexOf('T-') !== 0) localStorage.setItem('mvDernierCode', moi);
+    } catch (e) { /* stockage refuse : on s'en passe */ }
+
     var el = document.getElementById('timeLeft');
     if (!el) return;
     // Konvèti fòma tan MikroTik (pa egz. "1w2d03:04:05", "23:59:00", "1h2m3s") an segond

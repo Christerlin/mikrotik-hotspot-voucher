@@ -392,12 +392,14 @@
       }
 
       // Affiche le code livré puis connecte automatiquement.
-      function showDelivered(code) {
+      function showDelivered(code, prolonge) {
         clearInterval(pollTimer);
         localStorage.removeItem("pendingOrder");
-        // Recharge : le client garde son code et sa session. Le renvoyer sur
-        // la page de connexion le déconnecterait pour rien.
-        if (recharge) {
+        // Recharge d'une session en cours : le client garde son code ET sa
+        // connexion. Le renvoyer sur la page de connexion le déconnecterait
+        // pour rien. Un code réactivé après coupure, lui, doit se reconnecter
+        // — et on le fait à sa place, plus bas.
+        if (recharge && prolonge) {
           showStatus(
             "<h3>Accès prolongé</h3>" +
               '<p>Votre code <span class="mono">' + recharge + "</span> continue de fonctionner.</p>" +
@@ -407,7 +409,8 @@
           return;
         }
         showStatus(
-          "<h3>Paiement confirmé</h3><p>Votre code d'accès :</p>" +
+          (recharge ? "<h3>Accès réactivé</h3><p>Votre code, le même :</p>"
+                    : "<h3>Paiement confirmé</h3><p>Votre code d'accès :</p>") +
             '<div class="code">' + code + "</div>" +
             '<p>Connexion automatique en cours…</p><div class="spinner"></div>' +
             '<p style="font-size:13px;margin-top:10px">Notez ce code pour vous reconnecter plus tard.</p>'
@@ -420,7 +423,7 @@
       // Traite le résultat d'une vérification. Renvoie true si c'est terminé.
       function handleResult(data) {
         if (data && data.status === "DELIVERED" && data.voucherCode) {
-          showDelivered(data.voucherCode);
+          showDelivered(data.voucherCode, data.prolonge);
           return true;
         }
         if (data && (data.status === "EXPIRED" || data.status === "FAILED")) {
