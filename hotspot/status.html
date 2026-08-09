@@ -44,7 +44,7 @@ function openLogout(){if(window.name!='hotspot_status') return true; open('$(lin
     $(if session-time-left)
       <div class="row"><span class="k">Connecté depuis</span><span class="v">$(uptime)</span></div>
       <div class="row highlight"><span class="k">Temps restant</span><span class="v" id="timeLeft">$(session-time-left)</span></div>
-      <div class="row" id="echeanceRow" style="display:none"><span class="k">Accès valable jusqu'à</span><span class="v" id="echeance">–</span></div>
+      <div class="row" id="echeanceRow" style="display:none"><span class="k">Accès valable encore</span><span class="v" id="echeance">–</span></div>
     $(else)
       <div class="row"><span class="k">Connecté depuis</span><span class="v">$(uptime)</span></div>
     $(endif)
@@ -160,10 +160,15 @@ function openLogout(){if(window.name!='hotspot_status') return true; open('$(lin
         .then(function (r) { return r.ok ? r.json() : null; })
         .then(function (d) {
           if (!d || typeof d.restant !== 'number') return;
-          var fin = new Date(Date.now() + d.restant * 1000);
+          // Durée restante, jamais une date : une date se calcule avec
+          // l'horloge du téléphone, et un téléphone à l'heure fausse
+          // affichait une échéance absurde alors que le décompte, lui,
+          // était juste. Une durée ne dépend d'aucune horloge locale.
+          var j = Math.floor(d.restant / 86400);
+          var h = Math.floor((d.restant % 86400) / 3600);
+          var mn = Math.floor((d.restant % 3600) / 60);
           document.getElementById('echeance').textContent =
-            fin.toLocaleString('fr-FR', { weekday: 'short', day: 'numeric',
-              month: 'short', hour: '2-digit', minute: '2-digit' });
+            j > 0 ? (j + ' j ' + h + ' h') : (h > 0 ? (h + ' h ' + mn + ' min') : (mn + ' min'));
           document.getElementById('echeanceRow').style.display = '';
           // La date fixe prime des qu'elle arrive avant la fin du temps de
           // connexion : c'est elle qui coupera l'acces.
